@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin RIPLAY | Kelola Konten</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/images/favicon-mhy.ico">
+  <link rel="apple-touch-icon" href="/images/logo-mhy.png">
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom Admin Styling -->
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="bg-light">
+
+  <!-- LOGIN CONTAINER -->
+  <div id="login-container" class="container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="card login-card shadow-lg border-0 p-4 w-100" style="max-width: 450px;">
+      <div class="text-center mb-4">
+        <img src="/images/logo-mhy-login.png" alt="BPRS MHY Logo" class="mb-3" style="height: 80px; width: auto; object-fit: contain;">
+        <h3 class="fw-bold">Panel Admin RIPLAY</h3>
+        <p class="text-muted">Masukkan kode sandi administrator untuk mengelola konten</p>
+      </div>
+      
+      <form id="loginForm">
+        <div class="mb-3">
+          <label for="username" class="form-label fw-semibold">Nama Pengguna (Username)</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fa-solid fa-user text-muted"></i></span>
+            <input type="text" class="form-control" id="username" required placeholder="Default: admin">
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label for="passcode" class="form-label fw-semibold">Kode Sandi (Passcode)</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fa-solid fa-key text-muted"></i></span>
+            <input type="password" class="form-control" id="passcode" required placeholder="Default: admin123">
+          </div>
+        </div>
+        
+        <div class="alert alert-danger" id="loginAlert" style="display: none;"></div>
+        
+        <button type="submit" class="btn btn-primary w-100 py-2.5 fw-bold" id="btnLogin">
+          <i class="fa-solid fa-right-to-bracket me-2"></i>Masuk Ke Dashboard
+        </button>
+      </form>
+      
+      <div class="text-center mt-4">
+        <a href="/" class="text-decoration-none text-muted small"><i class="fa-solid fa-arrow-left me-1"></i>Kembali ke Layanan RIPLAY</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD CONTAINER (Initially Hidden) -->
+  <div id="dashboard-container" class="hidden">
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-custom shadow-sm sticky-top">
+      <div class="container-fluid px-4">
+        <a class="navbar-brand fw-bold" href="#">
+          <i class="fa-solid fa-gears text-warning me-2"></i>RIPLAY Dashboard
+        </a>
+        <div class="d-flex align-items-center gap-3">
+          <a href="/" class="btn btn-outline-light btn-sm" target="_blank">
+            <i class="fa-solid fa-desktop me-1"></i>Lihat Layanan RIPLAY
+          </a>
+          <button class="btn btn-danger btn-sm" onclick="handleLogout()">
+            <i class="fa-solid fa-right-from-bracket me-1"></i>Keluar
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="container-fluid p-4">
+      <div class="row g-4">
+        
+        <!-- Sidebar Navigation Tabs -->
+        <div class="col-lg-3">
+          <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+            <div class="list-group list-group-flush" id="dashboard-tabs" role="tablist">
+              <button class="list-group-item list-group-item-action active p-3" id="tab-products-btn" data-bs-toggle="list" href="#pane-products" role="tab">
+                <i class="fa-solid fa-list-check me-2 text-primary"></i>Manajemen Produk
+              </button>
+              <button class="list-group-item list-group-item-action p-3" id="tab-settings-btn" data-bs-toggle="list" href="#pane-settings" role="tab">
+                <i class="fa-solid fa-building me-2 text-warning"></i>Pengaturan Profil Bank
+              </button>
+            </div>
+          </div>
+          
+          <div class="card shadow-sm border-0 rounded-4 mt-4 p-3 bg-gradient-info text-white">
+            <h6 class="fw-bold mb-2"><i class="fa-solid fa-circle-info me-1"></i>Petunjuk Penggunaan</h6>
+            <p class="small mb-0 text-white-90">Setiap perubahan data pada panel ini akan langsung ter-update secara realtime pada layar RIPLAY utama.</p>
+          </div>
+        </div>
+
+        <!-- Dashboard Content Panels -->
+        <div class="col-lg-9">
+          <div class="tab-content" id="nav-tabContent">
+            
+            <!-- PANEL 1: Products Management -->
+            <div class="tab-pane fade show active" id="pane-products" role="tabpanel" aria-labelledby="tab-products-btn">
+              <div class="card shadow-sm border-0 rounded-4 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                  <div>
+                    <h4 class="fw-bold mb-1 text-dark-custom">Produk RIPLAY Terdaftar</h4>
+                    <p class="text-muted mb-0 small">Tambahkan, edit, atau hapus ringkasan produk & layanan bank</p>
+                  </div>
+                  <button class="btn btn-primary fw-bold" onclick="showAddProductModal()">
+                    <i class="fa-solid fa-plus me-1"></i>Tambah Produk Baru
+                  </button>
+                </div>
+
+                <!-- Products Table -->
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle custom-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Nama Produk</th>
+                        <th scope="col">Akad Syariah</th>
+                        <th scope="col">Unduh Dokumen</th>
+                        <th scope="col" class="text-end">Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                      <!-- Rendered by admin.js -->
+                      <tr>
+                        <td colspan="5" class="text-center py-5">
+                          <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                          <p class="mt-2 text-muted">Memuat tabel produk...</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANEL 2: Bank Settings -->
+            <div class="tab-pane fade" id="pane-settings" role="tabpanel" aria-labelledby="tab-settings-btn">
+              <div class="card shadow-sm border-0 rounded-4 p-4">
+                <h4 class="fw-bold mb-1 text-dark-custom">Profil & Pengaturan Bank</h4>
+                <p class="text-muted mb-4 small">Sesuaikan informasi instansi bank yang tampil di footer RIPLAY utama</p>
+                
+                <form id="settingsForm">
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="setBankName" class="form-label fw-semibold">Nama Lengkap Bank</label>
+                      <input type="text" class="form-control" id="setBankName" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="setLogoText" class="form-label fw-semibold">Teks Logo/Brand Singkat</label>
+                      <input type="text" class="form-control" id="setLogoText" required>
+                    </div>
+                    <div class="col-12">
+                      <label for="setHeroSubtitle" class="form-label fw-semibold">Subjudul Hero (Tagline Utama)</label>
+                      <input type="text" class="form-control" id="setHeroSubtitle" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="setPhone" class="form-label fw-semibold">No. Telepon / Hotline</label>
+                      <input type="text" class="form-control" id="setPhone" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="setWhatsapp" class="form-label fw-semibold">No. WhatsApp (Format Kode Negara: 62xxxx)</label>
+                      <input type="text" class="form-control" id="setWhatsapp" required>
+                      <small class="text-muted">Gunakan angka saja tanpa tanda + atau spasi, contoh: 6285328707560</small>
+                    </div>
+                    <div class="col-12">
+                      <label for="setEmail" class="form-label fw-semibold">E-mail Instansi</label>
+                      <input type="email" class="form-control" id="setEmail" required>
+                    </div>
+                    <div class="col-12">
+                      <label for="setAddress" class="form-label fw-semibold">Alamat Kantor Pusat</label>
+                      <textarea class="form-control" id="setAddress" rows="2" required></textarea>
+                    </div>
+                    
+                    <hr class="my-4">
+                    <h6 class="fw-bold text-primary mb-1"><i class="fa-solid fa-palette me-1"></i>Visual & Kustomisasi Branding</h6>
+                    <p class="text-muted small">Atur warna tema korporat dan unggah file logo instansi</p>
+
+                    <div class="col-md-6">
+                      <label for="setThemeColor" class="form-label fw-semibold">Warna Tema Utama</label>
+                      <div class="input-group">
+                        <input type="color" class="form-control form-control-color p-1" id="setThemeColor" style="width: 50px; height: 43px;" value="#196a5c">
+                        <input type="text" class="form-control" id="setThemeColorHex" value="#196a5c" required placeholder="#196a5c">
+                      </div>
+                      <small class="text-muted">Warna utama untuk tombol, tab, hero banner, dan aksen navigasi.</small>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="setBgColor" class="form-label fw-semibold">Warna Latar Belakang RIPLAY</label>
+                      <div class="input-group">
+                        <input type="color" class="form-control form-control-color p-1" id="setBgColor" style="width: 50px; height: 43px;" value="#f5f7fb">
+                        <input type="text" class="form-control" id="setBgColorHex" value="#f5f7fb" required placeholder="#f5f7fb">
+                      </div>
+                      <small class="text-muted">Warna latar belakang halaman utama RIPLAY (dalam mode terang).</small>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="setLogoUrl" class="form-label fw-semibold">Logo Utama (Navbar Terang)</label>
+                      <input type="text" class="form-control" id="setLogoUrl" placeholder="Contoh: /uploads/logo-bank.png">
+                      <div class="form-text text-muted mb-2"><i class="fa-solid fa-circle-info me-1"></i> Rekomendasi: Lanskap, rasio 4:1 - 5:1 (lebar 250px - 300px, tinggi 60px). Gunakan format PNG transparan atau SVG.</div>
+                      <div class="mt-2 bg-white p-2 rounded border border-light-subtle">
+                        <label class="form-label small fw-bold mb-1">Unggah Logo Utama</label>
+                        <div class="input-group input-group-sm">
+                          <input type="file" class="form-control" id="logoFileUploader" accept=".png,.jpg,.jpeg,.svg" onchange="uploadLogoImage('logoFileUploader', 'setLogoUrl', 'logoPreview')">
+                          <button type="button" class="btn btn-dark" onclick="uploadLogoImage('logoFileUploader', 'setLogoUrl', 'logoPreview')">Upload</button>
+                        </div>
+                        <div id="logoUploadStatus" class="small mt-1" style="display:none;"></div>
+                        <div class="mt-2 text-center" id="logoPreviewWrapper">
+                          <img id="logoPreview" src="" alt="Preview Logo Utama" class="img-thumbnail" style="max-height: 50px; display: none;">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="setLogoLightUrl" class="form-label fw-semibold">Logo Footer (Latar Belakang Gelap)</label>
+                      <input type="text" class="form-control" id="setLogoLightUrl" placeholder="Contoh: /uploads/logo-bank-white.png">
+                      <div class="form-text text-muted mb-2"><i class="fa-solid fa-circle-info me-1"></i> Rekomendasi: Lanskap (lebar 300px - 400px, tinggi 90px - 120px). Gunakan logo warna putih/terang dengan latar transparan (PNG/SVG).</div>
+                      <div class="mt-2 bg-white p-2 rounded border border-light-subtle">
+                        <label class="form-label small fw-bold mb-1">Unggah Logo Footer</label>
+                        <div class="input-group input-group-sm">
+                          <input type="file" class="form-control" id="logoLightFileUploader" accept=".png,.jpg,.jpeg,.svg" onchange="uploadLogoImage('logoLightFileUploader', 'setLogoLightUrl', 'logoLightPreview')">
+                          <button type="button" class="btn btn-dark" onclick="uploadLogoImage('logoLightFileUploader', 'setLogoLightUrl', 'logoLightPreview')">Upload</button>
+                        </div>
+                        <div id="logoLightUploadStatus" class="small mt-1" style="display:none;"></div>
+                        <div class="mt-2 text-center bg-dark p-2 rounded" id="logoLightPreviewWrapper" style="display: none;">
+                          <img id="logoLightPreview" src="" alt="Preview Logo Footer" class="img-thumbnail bg-transparent border-0" style="max-height: 50px;">
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    <h6 class="fw-bold text-primary mb-1"><i class="fa-solid fa-share-nodes me-1"></i>Tautan Media Sosial</h6>
+                    <p class="text-muted small">Biarkan kosong jika tautan media sosial tidak digunakan</p>
+                    
+                    <div class="col-md-4">
+                      <label for="setFacebook" class="form-label fw-semibold">Facebook URL</label>
+                      <input type="url" class="form-control" id="setFacebook">
+                    </div>
+                    <div class="col-md-4">
+                      <label for="setInstagram" class="form-label fw-semibold">Instagram URL</label>
+                      <input type="url" class="form-control" id="setInstagram">
+                    </div>
+                    <div class="col-md-4">
+                      <label for="setYoutube" class="form-label fw-semibold">YouTube Channel URL</label>
+                      <input type="url" class="form-control" id="setYoutube">
+                    </div>
+
+                    <hr class="my-4">
+                    <h6 class="fw-bold text-danger mb-1"><i class="fa-solid fa-shield-halved me-1"></i>Keamanan Dashboard</h6>
+                    
+                    <div class="col-md-6">
+                      <label for="setUsername" class="form-label fw-semibold">Ubah Username Admin Baru</label>
+                      <input type="text" class="form-control" id="setUsername" placeholder="Kosongkan jika tidak ingin diubah">
+                      <small class="text-muted">Username baru untuk masuk ke dashboard admin.</small>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="setPasscode" class="form-label fw-semibold">Ubah Kode Sandi Admin Baru</label>
+                      <input type="password" class="form-control" id="setPasscode" placeholder="Kosongkan jika tidak ingin diubah">
+                      <small class="text-muted">Kode sandi baru harus mudah diingat.</small>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-warning px-4 py-2 fw-bold text-dark" id="btnSaveSettings">
+                      <i class="fa-solid fa-floppy-disk me-1"></i>Simpan Perubahan Profil
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT PRODUCT MODAL -->
+  <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <form id="productForm" class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-dark-custom text-white border-0 py-3">
+          <h5 class="modal-title fw-bold" id="productModalLabel">Tambah Produk RIPLAY</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        
+        <div class="modal-body p-4">
+            <input type="hidden" id="prodId">
+            
+            <div class="row g-3">
+              <!-- Basic Product Info -->
+              <div class="col-md-6">
+                <label for="prodCategory" class="form-label fw-semibold">Kategori Produk</label>
+                <select class="form-select" id="prodCategory" required>
+                  <option value="tabungan">Tabungan</option>
+                  <option value="deposito">Deposito</option>
+                  <option value="pembiayaan">Pembiayaan</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="prodName" class="form-label fw-semibold">Nama Produk</label>
+                <input type="text" class="form-control" id="prodName" required placeholder="Contoh: Tabungan Titipan iB BDS">
+              </div>
+              <div class="col-md-6">
+                <label for="prodContract" class="form-label fw-semibold">Akad Syariah</label>
+                <input type="text" class="form-control" id="prodContract" required placeholder="Contoh: Wadi'ah Yad Dhamanah / Mudharabah">
+              </div>
+              <div class="col-md-6">
+                <label for="prodTagline" class="form-label fw-semibold">Tagline Singkat (Preview)</label>
+                <input type="text" class="form-control" id="prodTagline" required placeholder="Contoh: Tabungan aman bebas biaya bulanan.">
+              </div>
+              <div class="col-12">
+                <label for="prodDescription" class="form-label fw-semibold">Deskripsi Lengkap Produk</label>
+                <textarea class="form-control" id="prodDescription" rows="3" required placeholder="Jelaskan secara detail kegunaan dan skema dari produk keuangan ini..."></textarea>
+              </div>
+              
+              <!-- Tabbed Sub-Lists -->
+              <div class="col-12 mt-4">
+                <div class="card border-light-subtle">
+                  <div class="card-header bg-light border-bottom border-light-subtle">
+                    <span class="fw-bold text-dark-custom"><i class="fa-solid fa-list-ul me-1"></i>Daftar Ringkasan Rincian RIPLAY</span>
+                  </div>
+                  <div class="card-body p-3">
+                    <ul class="nav nav-pills nav-justified mb-3" id="pills-tab" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link active small py-2" id="pills-features-tab" data-bs-toggle="pill" data-bs-target="#pills-features" type="button" role="tab">Fitur</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link small py-2" id="pills-benefits-tab" data-bs-toggle="pill" data-bs-target="#pills-benefits" type="button" role="tab">Manfaat</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link small py-2" id="pills-risks-tab" data-bs-toggle="pill" data-bs-target="#pills-risks" type="button" role="tab">Risiko</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link small py-2" id="pills-fees-tab" data-bs-toggle="pill" data-bs-target="#pills-fees" type="button" role="tab">Biaya</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link small py-2" id="pills-reqs-tab" data-bs-toggle="pill" data-bs-target="#pills-reqs" type="button" role="tab">Syarat</button>
+                      </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="pills-tabContent">
+                      <!-- Tab features -->
+                      <div class="tab-pane fade show active" id="pills-features" role="tabpanel">
+                        <div id="featuresListContainer" class="list-editor-container"></div>
+                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addListRow('featuresListContainer')">
+                          <i class="fa-solid fa-plus me-1"></i>Tambah Baris Fitur
+                        </button>
+                      </div>
+                      
+                      <!-- Tab benefits -->
+                      <div class="tab-pane fade" id="pills-benefits" role="tabpanel">
+                        <div id="benefitsListContainer" class="list-editor-container"></div>
+                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addListRow('benefitsListContainer')">
+                          <i class="fa-solid fa-plus me-1"></i>Tambah Baris Manfaat
+                        </button>
+                      </div>
+                      
+                      <!-- Tab risks -->
+                      <div class="tab-pane fade" id="pills-risks" role="tabpanel">
+                        <div id="risksListContainer" class="list-editor-container"></div>
+                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addListRow('risksListContainer')">
+                          <i class="fa-solid fa-plus me-1"></i>Tambah Baris Risiko
+                        </button>
+                      </div>
+                      
+                      <!-- Tab fees -->
+                      <div class="tab-pane fade" id="pills-fees" role="tabpanel">
+                        <div id="feesListContainer" class="list-editor-container"></div>
+                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addListRow('feesListContainer')">
+                          <i class="fa-solid fa-plus me-1"></i>Tambah Baris Biaya
+                        </button>
+                      </div>
+                      
+                      <!-- Tab reqs -->
+                      <div class="tab-pane fade" id="pills-reqs" role="tabpanel">
+                        <div id="reqsListContainer" class="list-editor-container"></div>
+                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addListRow('reqsListContainer')">
+                          <i class="fa-solid fa-plus me-1"></i>Tambah Baris Syarat
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <hr class="my-4">
+
+              <!-- Documents & CTAs -->
+              <div class="col-md-6">
+                <label for="prodPdfUrl" class="form-label fw-semibold">Tautan Brosur / Dokumen RIPLAY (PDF/PNG)</label>
+                <input type="text" class="form-control" id="prodPdfUrl" placeholder="Contoh: /uploads/brosur-produk.pdf atau .png">
+                
+                <div class="mt-2 bg-light p-2 rounded border border-light-subtle">
+                  <label class="form-label small fw-bold mb-1">Unggah Brosur / Dokumen (PDF atau Gambar)</label>
+                  <div class="input-group input-group-sm">
+                    <input type="file" class="form-control" id="pdfFileUploader" accept=".pdf,.png,.jpg,.jpeg,.webp,.svg,image/*,application/pdf" onchange="uploadPdfFile()">
+                    <button type="button" class="btn btn-dark" onclick="uploadPdfFile()">Upload</button>
+                  </div>
+                  <div id="uploadStatus" class="small mt-1" style="display:none;"></div>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <label for="prodWaLink" class="form-label fw-semibold">Tautan Kustom Pengajuan WhatsApp (Opsional)</label>
+                <input type="url" class="form-control" id="prodWaLink" placeholder="Format: https://api.whatsapp.com/send/...">
+                <small class="text-muted">Biarkan kosong untuk menggunakan tautan chat default dari bank.</small>
+              </div>
+              
+              <div class="col-md-6">
+                <label for="prodImageUrl" class="form-label fw-semibold">Gambar Produk (Kartu & Modal)</label>
+                <input type="text" class="form-control" id="prodImageUrl" placeholder="Contoh: /images/tabungan-wadiah.png">
+                <div class="form-text text-muted mb-2"><i class="fa-solid fa-circle-info me-1"></i> Rekomendasi: Rasio 3:2 (contoh: 600px × 400px s.d 900px × 600px) agar pas di kartu produk & modal detail.</div>
+                
+                <div class="mt-2 bg-light p-2 rounded border border-light-subtle">
+                  <label class="form-label small fw-bold mb-1">Unggah Gambar Produk</label>
+                  <div class="input-group input-group-sm">
+                    <input type="file" class="form-control" id="productImageFileUploader" accept=".png,.jpg,.jpeg,.svg,.webp,image/*" onchange="uploadProductImageFile()">
+                    <button type="button" class="btn btn-dark" onclick="uploadProductImageFile()">Upload</button>
+                  </div>
+                  <div id="productImageUploadStatus" class="small mt-1" style="display:none;"></div>
+                  <div class="mt-2 text-center" id="productImagePreviewWrapper" style="display:none;">
+                    <img id="productImagePreview" src="" alt="Pratinjau Gambar Produk" class="img-thumbnail" style="max-height: 80px;">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          
+          <div class="modal-footer border-0 bg-light py-3">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batalkan</button>
+            <button type="submit" class="btn btn-primary fw-bold px-4" id="btnSaveProduct">
+              <i class="fa-solid fa-circle-check me-1"></i>Simpan Produk
+            </button>
+          </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle with Popper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Custom Notification Toast Container -->
+  <div id="custom-toast-container" class="position-fixed bottom-0 end-0 p-4" style="z-index: 9999;"></div>
+
+  <!-- Admin Controller -->
+  <script src="/js/admin.js"></script>
+</body>
+</html>

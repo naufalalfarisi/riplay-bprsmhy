@@ -1,0 +1,23 @@
+{
+  "name": "riplay-bprs",
+  "version": "1.0.0",
+  "description": "Ringkasan Informasi Produk dan Layanan (RIPLAY) untuk Bank Syariah",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "riplay",
+    "bank",
+    "syariah",
+    "kiosk"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1"
+  }
+}

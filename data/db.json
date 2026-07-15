@@ -1,0 +1,279 @@
+{
+  "settings": {
+    "bankName": "PT. BPR Syariah Mitra Harmoni Yogyakarta",
+    "logoText": "BPRS MHY",
+    "phone": "(0274) 547774",
+    "address": "Jl. Doktor Sutomo No. 07, Kota Yogyakarta, Provinsi Daerah Istimewa Yogyakarta, Kode Pos: 55211",
+    "email": "mhy.syariah@yahoo.com",
+    "whatsapp": "62274547774",
+    "username": "superadmin",
+    "passcode": "admin123",
+    "heroSubtitle": "Ringkasan Informasi Produk & Layanan - BPRS Mitra Harmoni Yogyakarta",
+    "themeColor": "#29b9a0",
+    "bgColor": "#f5f7fb",
+    "logoUrl": "/uploads/1784115358139-mhy-color.png",
+    "logoLightUrl": "/uploads/1784115708529-mhy-white_rev_.png",
+    "facebook": "https://www.facebook.com/bprsmhy/",
+    "instagram": "https://www.instagram.com/mitraharmoniyogyakarta/",
+    "youtube": "https://www.youtube.com/@bprsmitraharmoniyogyakarta9698"
+  },
+  "products": [
+    {
+      "id": "prod-1",
+      "category": "tabungan",
+      "name": "Tabungan Ukhuwah",
+      "tagline": "Tabungan berhadiah undian nasional BPR Syariah se-Indonesia.",
+      "contract": "Mudharabah Mutlaqah",
+      "description": "Tabungan Ukhuwah adalah produk tabungan bersama BPR Syariah se-Indonesia yang dikeluarkan oleh DPP HIMBARSI. Dikelola menggunakan akad mudharabah mutlaqah untuk nasabah perorangan, kelompok, organisasi, atau lembaga. Dilengkapi program undian berhadiah nasional untuk memotivasi semangat menabung nasabah.",
+      "imageUrl": "/images/tabungan-ukhuwah.png",
+      "features": [
+        "Setoran awal minimal Rp 100.000",
+        "Poin undian: 1 poin untuk setiap kelipatan saldo rata-rata Rp 100.000",
+        "Saldo minimal Rp 1.000.000 untuk ikut serta pengundian hadiah nasional",
+        "Program undian mencakup hadiah mobil, motor, paket umrah, dll."
+      ],
+      "benefits": [
+        "Dijamin oleh Lembaga Penjamin Simpanan (LPS) hingga Rp 2 Miliar",
+        "Bebas biaya administrasi bulanan",
+        "Dana tabungan dapat dicairkan kapan saja (likuid)",
+        "Bagi hasil kompetitif disalurkan ke pembiayaan syariah yang produktif"
+      ],
+      "risks": [
+        "Bagi hasil fluktuatif mengikuti kinerja pendapatan pembiayaan bank"
+      ],
+      "fees": [
+        "Setoran Awal: Rp 100.000",
+        "Biaya Administrasi Bulanan: Rp 0 (Bebas Biaya)",
+        "Saldo Mengendap Minimal: Rp 100.000",
+        "Biaya Penutupan Rekening: Rp 25.000"
+      ],
+      "requirements": [
+        "Mengisi Formulir Pembukaan Tabungan",
+        "Fotokopi Kartu Tanda Penduduk (E-KTP) yang masih berlaku",
+        "Fotokopi Legalitas Perusahaan/Organisasi/Lembaga (untuk rekening non-perorangan)"
+      ],
+      "pdfUrl": "/uploads/1784029061324-ChatGPT_Image_Jul_14__2026__06_14_55_PM.png",
+      "whatsappLink": "https://api.whatsapp.com/send/?phone=6285328707560&text=Assalamu%27alaikum+saya+tertarik+membuka+Tabungan+Ukhuwah"
+    },
+    {
+      "id": "prod-2",
+      "category": "tabungan",
+      "name": "Tabungan iB Harmoni Plus",
+      "tagline": "Rencanakan masa depan berkah sekaligus raih undian berhadiah lokal.",
+      "contract": "Mudharabah / Wadi'ah",
+      "description": "Tabungan iB Harmoni Plus merupakan produk tabungan berhadiah dari BPRS Mitra Harmoni Yogyakarta. Ditujukan untuk perorangan maupun lembaga dengan setoran awal yang sangat terjangkau, memberikan rasa aman, serta peluang memenangkan hadiah lokal di setiap periodenya.",
+      "imageUrl": "/uploads/1784030205325-ChatGPT_Image_Jul_14__2026__06_15_03_PM.png",
+      "features": [
+        "Setoran awal sangat ringan mulai dari Rp 10.000",
+        "Setiap kelipatan saldo Rp 100.000 mendapatkan 1 poin undian",
+        "Aman dan dikelola secara syariah penuh"
+      ],
+      "benefits": [
+        "Kesempatan memenangkan undian berhadiah eksklusif tingkat regional",
+        "Buku tabungan sebagai bukti kepemilikan dan sarana pencatatan transaksi",
+        "Dana aman dijamin oleh Lembaga Penjamin Simpanan (LPS)"
+      ],
+      "risks": [
+        "Bagi hasil bulanan bersifat fluktuatif sesuai keuntungan riil bank"
+      ],
+      "fees": [
+        "Setoran Awal: Rp 10.000",
+        "Administrasi Bulanan: Sesuai ketentuan yang berlaku",
+        "Biaya Tutup Rekening: Rp 10.000"
+      ],
+      "requirements": [
+        "Mengisi formulir pembukaan tabungan iB Harmoni Plus",
+        "Fotokopi Kartu Tanda Penduduk (KTP) yang masih berlaku"
+      ],
+      "pdfUrl": "/uploads/1784027770192-ChatGPT_Image_Jul_14__2026__06_15_03_PM.png",
+      "whatsappLink": "https://api.whatsapp.com/send/?phone=6285328707560&text=Assalamu%27alaikum+saya+tertarik+membuka+Tabungan+iB+Harmoni+Plus"
+    },
+    {
+      "id": "prod-3",
+      "category": "tabungan",
+      "name": "Tabungan iB Haji & Umroh",
+      "tagline": "Wujudkan niat suci beribadah ke Baitullah secara terencana.",
+      "contract": "Mudharabah / Wadi'ah",
+      "description": "Tabungan iB Haji & Umroh dirancang khusus untuk membantu calon jemaah dalam merencanakan dan mempersiapkan biaya perjalanan ibadah Haji maupun Umroh ke Baitullah dengan sistem tabungan berjangka yang aman, halal, dan bebas dari riba.",
+      "imageUrl": "/images/tabungan-wadiah.png",
+      "features": [
+        "Setoran awal pembukaan rekening mulai dari Rp 200.000",
+        "Setoran lanjutan bebas sesuai kemampuan nasabah",
+        "Dikelola secara syariah dengan akad terpercaya"
+      ],
+      "benefits": [
+        "Bebas biaya administrasi bulanan",
+        "Mendapatkan porsi bagi hasil (nisbah) yang kompetitif",
+        "Aman dan dijamin sepenuhnya oleh Lembaga Penjamin Simpanan (LPS)"
+      ],
+      "risks": [
+        "Dana tidak dapat ditarik setiap saat kecuali untuk keperluan pendaftaran haji/umroh atau pembatalan keberangkatan"
+      ],
+      "fees": [
+        "Setoran Awal: Rp 200.000",
+        "Biaya Administrasi Bulanan: Rp 0 (Bebas Biaya)",
+        "Biaya Penutupan Rekening: Rp 20.000"
+      ],
+      "requirements": [
+        "Fotokopi KTP/Paspor yang masih berlaku",
+        "Mengisi formulir pembukaan Tabungan iB Haji & Umroh"
+      ],
+      "pdfUrl": "",
+      "whatsappLink": "https://api.whatsapp.com/send/?phone=6285328707560&text=Assalamu%27alaikum+saya+tertarik+membuka+Tabungan+iB+Haji+dan+Umroh"
+    },
+    {
+      "id": "prod-4",
+      "category": "tabungan",
+      "name": "Tabungan iB Qurban",
+      "tagline": "Rencanakan ibadah kurban Anda secara berkah dan konsisten.",
+      "contract": "Mudharabah / Wadi'ah",
+      "description": "Tabungan iB Qurban membantu Anda merencanakan pembelian hewan kurban terbaik setiap tahunnya dengan cara menyisihkan dana secara konsisten dan teratur setiap bulannya berdasarkan prinsip-prinsip keuangan syariah.",
+      "imageUrl": "/images/tabungan-hadiah.png",
+      "features": [
+        "Setoran awal mulai dari Rp 100.000",
+        "Penyetoran rutin bulanan disesuaikan dengan target harga hewan kurban",
+        "Penutupan rekening otomatis saat menjelang hari raya Idul Adha"
+      ],
+      "benefits": [
+        "Bebas biaya administrasi bulanan",
+        "Membantu kedisiplinan perencanaan ibadah kurban tahunan",
+        "Dana aman dijamin oleh Lembaga Penjamin Simpanan (LPS)"
+      ],
+      "risks": [
+        "Bagi hasil fluktuatif tergantung pada perolehan pendapatan operasional bank"
+      ],
+      "fees": [
+        "Setoran Awal: Rp 100.000",
+        "Biaya Administrasi Bulanan: Rp 0 (Bebas Biaya)",
+        "Biaya Penutupan Rekening: Rp 10.000"
+      ],
+      "requirements": [
+        "Mengisi formulir pendaftaran tabungan iB Qurban",
+        "Fotokopi Kartu Tanda Penduduk (KTP)"
+      ],
+      "pdfUrl": "",
+      "whatsappLink": "https://api.whatsapp.com/send/?phone=6285328707560&text=Assalamu%27alaikum+saya+tertarik+membuka+Tabungan+iB+Qurban"
+    },
+    {
+      "id": "prod-5",
+      "category": "tabungan",
+      "name": "Tabungan Ar Raffa",
+      "tagline": "Fleksibilitas tabungan harian dengan keuntungan bagi hasil setara deposito.",
+      "contract": "Mudharabah Mutlaqah",
+      "description": "Tabungan Ar Raffa memberikan kombinasi terbaik bagi keuangan Anda: bagi hasil yang tinggi dan kompetitif setara dengan deposito berjangka, tetapi dana tetap likuid dan dapat ditarik sewaktu-waktu kapan pun Anda membutuhkannya.",
+      "imageUrl": "/images/tabungan-wadiah.png",
+      "features": [
+        "Setoran awal pembukaan rekening mulai dari Rp 500.000",
+        "Bagi hasil kompetitif yang dihitung harian",
+        "Dapat digunakan sebagai agunan atau jaminan pembiayaan syariah"
+      ],
+      "benefits": [
+        "Bagi hasil jauh lebih tinggi dari produk tabungan biasa",
+        "Dana likuid, penarikan fleksibel sewaktu-waktu",
+        "Simpanan aman dan dijamin penuh oleh Lembaga Penjamin Simpanan (LPS)"
+      ],
+      "risks": [
+        "Nisbah bagi hasil fluktuatif mengikuti pendapatan bulanan bank"
+      ],
+      "fees": [
+        "Setoran Awal: Rp 500.000",
+        "Biaya Administrasi Bulanan: Sesuai ketentuan yang berlaku",
+        "Biaya Penutupan Rekening: Rp 20.000"
+      ],
+      "requirements": [
+        "Mengisi formulir pembukaan tabungan Ar Raffa",
+        "Fotokopi KTP yang masih berlaku"
+      ],
+      "pdfUrl": "",
+      "whatsappLink": "https://api.whatsapp.com/send/?phone=6285328707560&text=Assalamu%27alaikum+saya+tertarik+membuka+Tabungan+Ar+Raffa"
+    },
+    {
+      "id": "prod-6",
+      "category": "deposito",
+      "name": "Deposito iB Harmoni",
+      "tagline": "Investasi berjangka syariah aman dengan nisbah tinggi dan dijamin LPS.",
+      "contract": "Mudharabah Mutlaqah",
+      "description": "Deposito iB Harmoni merupakan investasi berjangka syariah yang aman, produktif, dan berkah. Dana nasabah dikelola secara profesional untuk disalurkan ke pembiayaan sektor riil yang halal, memberikan bagi hasil kompetitif dengan pilihan jangka waktu yang fleksibel.",
+      "imageUrl": "/images/tabungan-wadiah.png",
+      "features": [
+        "Pilihan jangka waktu: 1 Bulan, 3 Bulan, 6 Bulan, dan 12 Bulan",
+        "Minimal penempatan dana hanya Rp 1.000.000",
+        "Bagi hasil tinggi, kompetitif, dan dibayarkan bulanan ke tabungan penampung",
+        "Bilyet deposito dapat dijadikan agunan/jaminan pembiayaan"
+      ],
+      "benefits": [
+        "Investasi aman karena dijamin oleh LPS hingga Rp 2 Miliar",
+        "Bagi hasil kompetitif yang lebih tinggi daripada tabungan biasa",
+        "Membantu kemakmuran umat melalui penyaluran pembiayaan yang halal"
+      ],
+      "risks": [
+        "Nisbah bagi hasil fluktuatif tergantung pada pendapatan operasional bank",
+        "Pencairan sebelum jatuh tempo dapat dikenai biaya administrasi"
+      ],
+      "fees": [
+        "Minimal Penempatan: Rp 1.000.000",
+        "Biaya Meterai: Sesuai ketentuan undang-undang perpajakan",
+        "Biaya Administrasi Pencairan Sebelum Jatuh Tempo: Sesuai kebijakan bank"
+      ],
+      "requirements": [
+        "Fotokopi Kartu Tanda Penduduk (KTP) perorangan / Legalitas Perusahaan (lembaga)",
+        "Fotokopi NPWP (jika ada)",
+        "Memiliki rekening tabungan di BPRS MHY sebagai penampung bagi hasil"
+      ],
+      "pdfUrl": "",
+      "whatsappLink": "https://api.whatsapp.com/send/?phone=6285328707560&text=Assalamu%27alaikum+saya+tertarik+dengan+Deposito+iB+Harmoni"
+    },
+    {
+      "id": "prod-7",
+      "category": "pembiayaan",
+      "name": "Pembiayaan iB Harmoni",
+      "tagline": "Solusi pembiayaan syariah terpercaya untuk kebutuhan konsumtif dan produktif Anda.",
+      "contract": "Murabahah (Jual Beli) / Mudharabah / Musyarakah",
+      "description": "Pembiayaan iB Harmoni memfasilitasi kebutuhan dana Anda secara syariah, baik untuk keperluan konsumtif (pembelian kendaraan, renovasi rumah, pendidikan) maupun produktif (modal kerja dan investasi usaha). Dikelola secara profesional dengan angsuran tetap yang adil dan transparan.",
+      "imageUrl": "/images/tabungan-wadiah.png",
+      "features": [
+        "Jangka waktu pembiayaan fleksibel sampai dengan 5 tahun (60 bulan)",
+        "Skema angsuran tetap setiap bulannya sehingga memudahkan pengelolaan keuangan",
+        "Aset jaminan dapat berupa sertifikat tanah/bangunan atau BPKB kendaraan"
+      ],
+      "benefits": [
+        "Penerapan akad murni syariah yang terhindar dari riba",
+        "Persyaratan mudah dan proses persetujuan cepat",
+        "Margin/bagi hasil kompetitif sesuai kesepakatan bersama"
+      ],
+      "risks": [
+        "Dikenakan denda ta'zir jika terjadi keterlambatan pembayaran yang disengaja (disalurkan ke dana sosial)",
+        "Penyitaan agunan secara syariah jika terjadi gagal bayar setelah pembinaan"
+      ],
+      "fees": [
+        "Biaya Administrasi: Disesuaikan dengan plafon pembiayaan",
+        "Biaya Asuransi (Jiwa & Kerugian): Sesuai ketentuan perusahaan asuransi syariah mitra",
+        "Biaya Notaris & Pengikatan Agunan: Sesuai tarif resmi Notaris mitra"
+      ],
+      "requirements": [
+        "Fotokopi KTP Suami & Istri (jika sudah menikah)",
+        "Fotokopi Kartu Keluarga (KK) & Buku Nikah",
+        "Slip Gaji terakhir or Surat Keterangan Penghasilan",
+        "Fotokopi dokumen jaminan: STNK/BPKB (kendaraan) or PBB/Sertifikat (tanah)"
+      ],
+      "pdfUrl": "",
+      "whatsappLink": "https://api.whatsapp.com/send/?phone=6285328707560&text=Assalamu%27alaikum+saya+tertarik+mengajukan+Pembiayaan+iB+Harmoni"
+    },
+    {
+      "id": "prod-1784030290391",
+      "name": "Tabungan Simpel",
+      "category": "tabungan",
+      "tagline": "Tabungan Pelajar",
+      "contract": "Mudharabah Mutlaqah",
+      "description": "Tabungan Pelajar",
+      "imageUrl": "/uploads/1784030250965-ChatGPT_Image_Jul_14__2026__06_14_55_PM.png",
+      "features": [],
+      "benefits": [],
+      "risks": [],
+      "fees": [],
+      "requirements": [],
+      "pdfUrl": "/uploads/1784030257132-ChatGPT_Image_Jul_14__2026__06_14_55_PM.png",
+      "whatsappLink": ""
+    }
+  ]
+}

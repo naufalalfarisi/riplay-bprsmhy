@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIPLAY BPRS MHY | Ringkasan Informasi Produk dan Layanan</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/images/favicon-mhy.ico">
+  <link rel="apple-touch-icon" href="/images/logo-mhy.png">
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  
+  <!-- Bootstrap CSS for grid skeleton -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom Premium Vanilla CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Floating Particles Background -->
+  <div id="particles-container"></div>
+
+  <!-- Header & Navbar -->
+  <nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="#home" id="navbar-logo">
+        <img src="/images/logo-mhy.svg" alt="Bank Syariah Mitra Harmoni Yogyakarta" class="navbar-logo-img" id="bank-name-logo">
+        <div id="bank-name-logo-text-wrapper" class="d-none align-items-center gap-2">
+          <i class="fa-solid fa-building-columns brand-icon"></i>
+          <span id="bank-name-logo-text" class="fw-bold">MHY Syariah</span>
+        </div>
+      </a>
+      
+      <div class="d-flex align-items-center ms-auto order-lg-last gap-3">
+        <!-- Live Clock (Kiosk feature) -->
+        <div class="kiosk-clock d-none d-md-flex align-items-center">
+          <i class="fa-regular fa-clock me-2"></i>
+          <span id="live-time">00:00:00</span>
+        </div>
+        
+        <!-- Theme Toggle Switch -->
+        <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" />
+          <div class="slider round">
+            <i class="fa-solid fa-sun icon-sun"></i>
+            <i class="fa-solid fa-moon icon-moon"></i>
+          </div>
+        </label>
+      </div>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+          <li class="nav-item">
+            <a class="nav-link active" href="#products" onclick="switchCategory('tabungan')">Tabungan</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#products" onclick="switchCategory('deposito')">Deposito</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#products" onclick="switchCategory('pembiayaan')">Pembiayaan</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#calculator">Simulasi</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link admin-entry" href="/admin.html" target="_blank">
+              <i class="fa-solid fa-gears me-1"></i>Kelola Konten
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="home">
+    <div class="container text-center position-relative">
+      <div class="badge-ojk-lps mb-3">
+        <span><i class="fa-solid fa-shield-halved me-1"></i> Diawasi OJK & Dijamin LPS</span>
+      </div>
+      <h1 class="hero-title animate-fade-in" id="hero-bank-name">RIPLAY INTERAKTIF</h1>
+      <p class="hero-subtitle animate-fade-in-delayed">Ringkasan Informasi Produk dan Layanan yang Transparan, Cepat, dan Sesuai Prinsip Syariah</p>
+      
+      <!-- Real-time Live Calendar -->
+      <div class="live-date-badge my-3">
+        <i class="fa-regular fa-calendar-days me-2"></i><span id="live-date">Senin, 13 Juli 2026</span>
+      </div>
+
+      <!-- Live Search Bar -->
+      <div class="search-wrapper mx-auto">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="productSearch" placeholder="Cari info tabungan wadiah, nisbah deposito, pembiayaan modal kerja..." oninput="handleSearch()">
+        <button class="search-clear-btn" id="searchClear" onclick="clearSearch()" style="display:none;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Showcase Section -->
+  <section class="products-section" id="products">
+    <div class="container">
+      
+      <!-- Category Tabs -->
+      <div class="category-tabs-container">
+        <button class="category-tab active" id="tab-tabungan" onclick="switchCategory('tabungan')">
+          <i class="fa-solid fa-wallet"></i>
+          <span>Tabungan</span>
+        </button>
+        <button class="category-tab" id="tab-deposito" onclick="switchCategory('deposito')">
+          <i class="fa-solid fa-vault"></i>
+          <span>Deposito</span>
+        </button>
+        <button class="category-tab" id="tab-pembiayaan" onclick="switchCategory('pembiayaan')">
+          <i class="fa-solid fa-hand-holding-dollar"></i>
+          <span>Pembiayaan</span>
+        </button>
+      </div>
+
+      <!-- Dynamic Cards Grid -->
+      <div class="row g-4" id="productsGrid">
+        <!-- Products will be dynamically loaded here by app.js -->
+        <div class="col-12 text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-2 text-muted">Memuat informasi produk...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Sharia Calculator Section -->
+  <section class="calculator-section py-5" id="calculator">
+    <div class="container">
+      <div class="section-header text-center mb-5">
+        <span class="badge-decor">Simulasi & Kalkulator</span>
+        <h2 class="section-title">Kalkulator Simulasi Keuangan</h2>
+        <p class="section-subtitle">Simulasikan keuntungan Deposito atau estimasi angsuran Pembiayaan Anda</p>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="calc-box glass-panel">
+            <div class="calc-tabs">
+              <button class="calc-tab active" id="calc-tab-deposito" onclick="switchCalc('deposito')">
+                <i class="fa-solid fa-vault me-2"></i>Simulasi Deposito
+              </button>
+              <button class="calc-tab" id="calc-tab-pembiayaan" onclick="switchCalc('pembiayaan')">
+                <i class="fa-solid fa-calculator me-2"></i>Simulasi Pembiayaan
+              </button>
+            </div>
+
+            <!-- Deposito Calculator -->
+            <div class="calc-content-wrapper active" id="calc-deposito">
+              <div class="row align-items-center">
+                <div class="col-md-6 mb-4 mb-md-0">
+                  <div class="calc-form">
+                    <div class="mb-3">
+                      <label for="depoAmount" class="form-label">Jumlah Penempatan Dana (Rupiah)</label>
+                      <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control form-control-lg" id="depoAmount" value="10000000" min="1000000" oninput="calculateDeposito()">
+                      </div>
+                      <small class="text-muted">Min. Penempatan Rp 1.000.000</small>
+                    </div>
+                    <div class="mb-3">
+                      <label for="depoTenure" class="form-label">Jangka Waktu (Tenor)</label>
+                      <select class="form-select form-select-lg" id="depoTenure" onchange="calculateDeposito()">
+                        <option value="1">1 Bulan (Nisbah Nasabah: 40%)</option>
+                        <option value="3">3 Bulan (Nisbah Nasabah: 45%)</option>
+                        <option value="6">6 Bulan (Nisbah Nasabah: 50%)</option>
+                        <option value="12" selected>12 Bulan (Nisbah Nasabah: 55%)</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="depoRate" class="form-label">Proyeksi Bagi Hasil Setara (Equivalent Rate per Tahun)</label>
+                      <div class="input-group">
+                        <input type="number" class="form-control" id="depoRate" value="6.5" step="0.1" oninput="calculateDeposito()">
+                        <span class="input-group-text">%</span>
+                      </div>
+                      <small class="text-muted">Berdasarkan data profit sharing bulan lalu</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="calc-result-card text-center text-white">
+                    <h4 class="mb-3">Estimasi Bagi Hasil Bulanan</h4>
+                    <div class="result-number" id="depoResult">Rp 54.167</div>
+                    <hr class="bg-white my-3">
+                    <div class="row">
+                      <div class="col-6 text-start">
+                        <small>Total Pokok:</small>
+                        <p class="fw-bold mb-0" id="depoResultTotal">Rp 10.000.000</p>
+                      </div>
+                      <div class="col-6 text-end">
+                        <small>Total Akumulasi Hasil:</small>
+                        <p class="fw-bold mb-0" id="depoResultAccum">Rp 650.000</p>
+                      </div>
+                    </div>
+                    <p class="small text-white-50 mt-3 mb-0">*Simulasi ini hanya estimasi. Hasil akhir menyesuaikan pendapatan riil bank syariah pada bulan bersangkutan.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pembiayaan Calculator -->
+            <div class="calc-content-wrapper" id="calc-pembiayaan">
+              <div class="row align-items-center">
+                <div class="col-md-6 mb-4 mb-md-0">
+                  <div class="calc-form">
+                    <div class="mb-3">
+                      <label for="loanAmount" class="form-label">Harga Barang / Plafon Pembiayaan</label>
+                      <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control form-control-lg" id="loanAmount" value="50000000" oninput="calculatePembiayaan()">
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="loanDp" class="form-label">Uang Muka / Down Payment (DP)</label>
+                      <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control form-control-lg" id="loanDp" value="5000000" oninput="calculatePembiayaan()">
+                      </div>
+                      <small class="text-muted">Minimum DP 10% direkomendasikan</small>
+                    </div>
+                    <div class="mb-3">
+                      <label for="loanTenure" class="form-label">Jangka Waktu Cicilan</label>
+                      <select class="form-select form-select-lg" id="loanTenure" onchange="calculatePembiayaan()">
+                        <option value="12">12 Bulan (1 Tahun)</option>
+                        <option value="24">24 Bulan (2 Tahun)</option>
+                        <option value="36" selected>36 Bulan (3 Tahun)</option>
+                        <option value="48">48 Bulan (4 Tahun)</option>
+                        <option value="60">60 Bulan (5 Tahun)</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="loanMargin" class="form-label">Margin Keuntungan Bank (per Tahun - Flat)</label>
+                      <div class="input-group">
+                        <input type="number" class="form-control" id="loanMargin" value="8.0" step="0.1" oninput="calculatePembiayaan()">
+                        <span class="input-group-text">%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="calc-result-card text-center text-white">
+                    <h4 class="mb-3">Estimasi Angsuran Bulanan</h4>
+                    <div class="result-number" id="loanResult">Rp 1.550.000</div>
+                    <hr class="bg-white my-3">
+                    <div class="row">
+                      <div class="col-6 text-start">
+                        <small>Pokok Pembiayaan:</small>
+                        <p class="fw-bold mb-0" id="loanResultPrincipal">Rp 45.000.000</p>
+                      </div>
+                      <div class="col-6 text-end">
+                        <small>Total Margin Bank:</small>
+                        <p class="fw-bold mb-0" id="loanResultMargin">Rp 10.800.000</p>
+                      </div>
+                    </div>
+                    <div class="mt-3 text-start small border border-light-subtle p-2 rounded">
+                      <i class="fa-solid fa-circle-info me-1"></i> Akad yang digunakan: <strong>Murabahah (Jual Beli)</strong>. Angsuran bersifat tetap/flat hingga masa pembiayaan berakhir.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive RIPLAY Modal -->
+  <div class="modal fade" id="riplayModal" tabindex="-1" aria-labelledby="riplayModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content glass-modal">
+        <div class="modal-header border-0">
+          <div class="modal-title-wrapper">
+            <span class="badge bg-primary-custom mb-1" id="modalCategory">TABUNGAN</span>
+            <h3 class="modal-title" id="riplayModalLabel">Nama Produk</h3>
+            <p class="modal-tagline text-muted mb-0" id="modalTagline">Tagline produk</p>
+          </div>
+          <button type="button" class="btn-close-custom" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        
+        <div class="modal-body py-4">
+          <div class="riplay-grid">
+            
+            <!-- Left Info Block -->
+            <div class="riplay-card-block main-description-block" id="modalDescriptionBlock">
+              <div class="block-title"><i class="fa-solid fa-circle-info text-primary"></i> 1. Deskripsi Produk & Akad</div>
+              <p class="mt-2" id="modalDescription">Deskripsi produk lengkap akan dimuat di sini...</p>
+              <div class="contract-box mt-3">
+                <span class="contract-label">Jenis Akad Syariah:</span>
+                <strong id="modalContract">Wadi'ah Yad Dhamanah</strong>
+              </div>
+            </div>
+
+            <!-- Product Image Block -->
+            <div class="riplay-card-block modal-product-image-block d-none" id="modalImageBlock">
+              <img id="modalProductImage" src="" alt="Gambar Produk">
+            </div>
+
+            <!-- Features & Requirements -->
+            <div class="riplay-card-block">
+              <div class="block-title"><i class="fa-solid fa-star text-primary"></i> 2. Fitur & Karakteristik Utama</div>
+              <ul class="custom-list mt-2" id="modalFeatures">
+                <!-- Features list items -->
+              </ul>
+            </div>
+
+            <div class="riplay-card-block">
+              <div class="block-title"><i class="fa-solid fa-file-signature text-primary"></i> 3. Persyaratan Dokumen</div>
+              <ul class="custom-list mt-2" id="modalRequirements">
+                <!-- Requirements list items -->
+              </ul>
+            </div>
+
+            <!-- Benefits, Risks & Fees -->
+            <div class="riplay-card-block">
+              <div class="block-title"><i class="fa-solid fa-circle-check text-success"></i> 4. Manfaat Utama</div>
+              <ul class="custom-list mt-2" id="modalBenefits">
+                <!-- Benefits list items -->
+              </ul>
+            </div>
+
+            <div class="riplay-card-block">
+              <div class="block-title"><i class="fa-solid fa-triangle-exclamation text-danger"></i> 5. Risiko Utama</div>
+              <ul class="custom-list mt-2" id="modalRisks">
+                <!-- Risks list items -->
+              </ul>
+            </div>
+
+            <div class="riplay-card-block">
+              <div class="block-title"><i class="fa-solid fa-receipt text-warning"></i> 6. Rincian Tarif & Biaya</div>
+              <ul class="custom-list mt-2" id="modalFees">
+                <!-- Fees list items -->
+              </ul>
+            </div>
+
+          </div>
+
+          <!-- LPS Penjaminan banner inside modal -->
+          <div class="lps-notice-banner mt-4">
+            <div class="d-flex align-items-center">
+              <i class="fa-solid fa-vault fa-2x text-primary me-3"></i>
+              <div>
+                <h6 class="mb-1 fw-bold">Jaminan Perlindungan Nasabah (LPS)</h6>
+                <p class="small text-muted mb-0">Simpanan nasabah di bank ini dijamin oleh Lembaga Penjamin Simpanan (LPS) sampai dengan nominal **Rp 2.000.000.000** (Dua Miliar Rupiah) per nasabah, sepanjang memenuhi kriteria penjaminan LPS.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer border-0">
+          <a href="#" class="btn-custom btn-pdf" id="btnDownloadPdf" download>
+            <i class="fa-solid fa-file-pdf"></i> Unduh Ringkasan (PDF)
+          </a>
+          <a href="#" class="btn-custom btn-whatsapp" id="btnWhatsappLink" target="_blank">
+            <i class="fa-brands fa-whatsapp"></i> Tanya Melalui WhatsApp
+          </a>
+          <button type="button" class="btn-custom btn-close-modal" data-bs-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <footer class="footer-section">
+    <!-- Background Blobs for Modern Aesthetic -->
+    <div class="footer-blob footer-blob-1"></div>
+    <div class="footer-blob footer-blob-2"></div>
+    
+    <div class="container">
+      
+      <!-- Row 1: Columns list -->
+      <div class="row gy-4 mb-5">
+        <div class="col-lg-4 col-md-12">
+          <div class="footer-brand mb-3" id="footer-brand-logo-wrapper">
+            <img src="/images/logo-mhy-white.svg" alt="Bank Syariah Mitra Harmoni Yogyakarta" class="footer-logo-img" id="footer-logo-text">
+            <div id="footer-logo-text-wrapper" class="d-none align-items-center gap-2 text-white">
+              <i class="fa-solid fa-building-columns fs-3 text-white"></i>
+              <span id="footer-bank-name-text" class="fw-bold fs-4">MHY Syariah</span>
+            </div>
+          </div>
+          <p class="footer-about" id="footer-about-text">PT. BPR Syariah Mitra Harmoni Yogyakarta menyediakan berbagai produk keuangan syariah terpercaya seperti Tabungan, Deposito, dan Pembiayaan untuk membantu mewujudkan masa depan berkah tanpa riba.</p>
+        </div>
+        
+        <div class="col-lg-3 col-md-4">
+          <h5 class="footer-title">Informasi Perusahaan</h5>
+          <ul class="footer-links">
+            <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Tentang Kami</a></li>
+            <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Dewan Pengurus</a></li>
+            <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Laporan Keuangan</a></li>
+            <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Penghargaan</a></li>
+            <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Karir</a></li>
+          </ul>
+        </div>
+        
+        <div class="col-lg-2 col-md-4">
+          <h5 class="footer-title">Produk & Layanan</h5>
+          <ul class="footer-links">
+            <li><a href="#products" onclick="switchCategory('tabungan')"><i class="fa-solid fa-chevron-right"></i> Tabungan</a></li>
+            <li><a href="#products" onclick="switchCategory('deposito')"><i class="fa-solid fa-chevron-right"></i> Deposito</a></li>
+            <li><a href="#products" onclick="switchCategory('pembiayaan')"><i class="fa-solid fa-chevron-right"></i> Pembiayaan</a></li>
+            <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Wakaf Uang</a></li>
+            <li><a href="#"><i class="fa-solid fa-chevron-right"></i> PPOB</a></li>
+            <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Aduan Nasabah</a></li>
+          </ul>
+        </div>
+        
+        <div class="col-lg-3 col-md-4">
+          <h5 class="footer-title">Simulasi</h5>
+          <ul class="footer-links mb-4">
+            <li><a href="#calculator" onclick="switchCalc('deposito')"><i class="fa-solid fa-chevron-right"></i> Simulasi Deposito</a></li>
+            <li><a href="#calculator" onclick="switchCalc('pembiayaan')"><i class="fa-solid fa-chevron-right"></i> Simulasi Pembiayaan</a></li>
+          </ul>
+          
+          <h5 class="footer-title">Berita & Pembaruan</h5>
+          <ul class="footer-links">
+            <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Berita</a></li>
+            <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Informasi Nasabah</a></li>
+            <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Edukasi Syariah</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Row 2: Contacts info boxes + Social media -->
+      <div class="footer-contact-row">
+        <div class="footer-contact-grid">
+          
+          <!-- Box 1: Address -->
+          <div class="contact-box">
+            <i class="fa-solid fa-location-dot contact-box-icon"></i>
+            <div class="contact-box-content">
+              <div class="mb-3">
+                <div class="contact-box-title">KANTOR PUSAT</div>
+                <div class="contact-box-text" id="footer-address">Alamat Kantor Pusat memuat...</div>
+              </div>
+              <div>
+                <div class="contact-box-title">KANTOR KAS GIWANGAN</div>
+                <div class="contact-box-text">Jl. Imogiri Tim., Giwangan, Kec. Umbulharjo, Kota Yogyakarta, Daerah Istimewa Yogyakarta 55163</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Box 2: Phone -->
+          <div class="contact-box">
+            <i class="fa-solid fa-phone contact-box-icon"></i>
+            <div class="contact-box-content">
+              <div class="contact-box-title">TELEPON</div>
+              <span class="contact-box-text-bold" id="footer-phone">Telepon memuat...</span>
+            </div>
+          </div>
+          
+          <!-- Box 3: WhatsApp -->
+          <div class="contact-box">
+            <i class="fa-brands fa-whatsapp contact-box-icon"></i>
+            <div class="contact-box-content">
+              <div class="contact-box-title">WHATSAPP</div>
+              <span class="contact-box-text-bold" id="footer-whatsapp">WhatsApp memuat...</span>
+            </div>
+          </div>
+          
+          <!-- Box 4: Email & Website -->
+          <div class="contact-box">
+            <i class="fa-solid fa-envelope contact-box-icon"></i>
+            <div class="contact-box-content">
+              <div class="contact-box-title">HUBUNGI KAMI</div>
+              <div class="contact-box-text" id="footer-email">Email memuat...</div>
+              <div class="contact-box-text" id="footer-web-url">www.bprsmh-yogyakarta.co.id</div>
+            </div>
+          </div>
+          
+          <!-- Box 5: Social Media Icons -->
+          <div class="footer-social-wrapper">
+            <a href="#" id="social-fb" class="footer-social-btn" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" id="social-ig" class="footer-social-btn" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" id="social-yt" class="footer-social-btn" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+          
+        </div>
+      </div>
+      
+      <!-- Row 3: Regulatory section -->
+      <div class="footer-regulatory-section">
+        <p>PT. BPR Syariah Mitra Harmoni Yogyakarta berizin dan diawasi oleh Otoritas Jasa Keuangan (OJK).</p>
+        <p>PT. BPR Syariah Mitra Harmoni Yogyakarta merupakan peserta penjaminan Lembaga Penjamin Simpanan (LPS).</p>
+        <p>Maksimum nilai simpanan yang dijamin LPS per nasabah per bank adalah Rp2 miliar.</p>
+      </div>
+      
+      <!-- Row 4: Copyright -->
+      <div class="footer-copyright-section">
+        <p class="mb-0">&copy; 2026 PT. BPR Syariah Mitra Harmoni Yogyakarta. All Rights Reserved.</p>
+      </div>
+      
+    </div>
+  </footer>
+
+  <!-- Bootstrap Bundle with Popper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Custom JS -->
+  <script src="/js/app.js"></script>
+</body>
+</html>

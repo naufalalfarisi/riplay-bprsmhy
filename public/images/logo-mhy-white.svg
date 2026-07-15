@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 140" fill="none">
+  <!-- Geometric ribbon icon (white version for dark/green backgrounds) -->
+  <g transform="translate(280, 0)">
+    <polygon points="20,80 60,50 100,80 60,110" fill="#ffffff" opacity="0.5"/>
+    <polygon points="50,50 90,20 130,50 90,80" fill="#ffffff" opacity="0.35"/>
+    <polygon points="35,65 75,35 115,65 75,95" fill="#ffffff" opacity="0.8"/>
+    <polygon points="70,30 100,10 130,30 100,50" fill="#ffffff" opacity="0.25"/>
+  </g>
+  <!-- Text: bank syariah -->
+  <text x="10" y="75" font-family="'Outfit', 'Segoe UI', sans-serif" font-size="38" font-weight="700" fill="#ffffff" letter-spacing="-0.5">bank syariah</text>
+  <!-- Text: mitra harmoni -->
+  <text x="10" y="115" font-family="'Outfit', 'Segoe UI', sans-serif" font-size="40" font-weight="800" fill="#ffffff" letter-spacing="-0.5" font-style="italic">mitra harmoni</text>
+  <!-- Text: bprs mitra harmoni yogyakarta -->
+  <text x="10" y="138" font-family="'Outfit', 'Segoe UI', sans-serif" font-size="16" font-weight="400" fill="rgba(255,255,255,0.7)" letter-spacing="0.5">bprs mitra harmoni yogyakarta</text>
+</svg>
