@@ -631,6 +631,7 @@ function applyThemeColors(themeColor, currentTheme) {
     
     root.style.setProperty('--primary-color', brightPrimary);
     root.style.setProperty('--primary-gradient', `linear-gradient(135deg, ${darkBgGradient} 0%, ${midBgGradient} 100%)`);
+    root.style.setProperty('--hero-gradient', `linear-gradient(to bottom, ${darkBgGradient} 0%, ${midBgGradient} 55%, ${midBgGradient}00 100%)`);
     
     const secondaryColor = adjustColorBrightness(themeColor, 60);
     root.style.setProperty('--secondary-color', secondaryColor);
@@ -647,6 +648,7 @@ function applyThemeColors(themeColor, currentTheme) {
     
     root.style.setProperty('--primary-color', themeColor);
     root.style.setProperty('--primary-gradient', `linear-gradient(135deg, ${darkPrimary} 0%, ${themeColor} 100%)`);
+    root.style.setProperty('--hero-gradient', `linear-gradient(to bottom, ${darkPrimary} 0%, ${themeColor} 55%, ${themeColor}00 100%)`);
     root.style.setProperty('--secondary-color', secondaryColor);
     root.style.setProperty('--accent-gradient', `linear-gradient(135deg, ${secondaryColor} 0%, ${accentEnd} 100%)`);
 

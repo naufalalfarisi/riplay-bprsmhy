@@ -666,6 +666,7 @@ function applyThemeColors(themeColor) {
   
   root.style.setProperty('--primary-color', themeColor);
   root.style.setProperty('--primary-gradient', `linear-gradient(135deg, ${darkPrimary} 0%, ${themeColor} 100%)`);
+  root.style.setProperty('--hero-gradient', `linear-gradient(to bottom, ${darkPrimary} 0%, ${themeColor} 55%, ${themeColor}00 100%)`);
   root.style.setProperty('--dark-bg', darkBg);
 }
 

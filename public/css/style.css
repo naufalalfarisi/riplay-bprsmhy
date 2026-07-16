@@ -14,6 +14,7 @@
   
   --primary-color: #196a5c;
   --primary-gradient: linear-gradient(135deg, #124e44 0%, #196a5c 100%);
+  --hero-gradient: linear-gradient(to bottom, #124e44 0%, #196a5c 55%, rgba(25, 106, 92, 0) 100%);
   --secondary-color: #3ca52f;
   --accent-gradient: linear-gradient(135deg, #3ca52f 0%, #79c06e 100%);
   --success-color: #2e7d32;
@@ -46,6 +47,7 @@
   
   --primary-color: #00e676;
   --primary-gradient: linear-gradient(135deg, #051d19 0%, #124e44 100%);
+  --hero-gradient: linear-gradient(to bottom, #051d19 0%, #124e44 55%, rgba(18, 78, 68, 0) 100%);
   --secondary-color: #00ffcc;
   --accent-gradient: linear-gradient(135deg, #00e676 0%, #26a69a 100%);
   --success-color: #10b981;
@@ -312,17 +314,13 @@ input:checked + .slider:before {
   position: relative;
   overflow: visible; /* Let search bar overlap bottom edge */
   text-align: center;
-  background: var(--primary-gradient);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--hero-gradient);
+  border-bottom: none;
 }
 
 .hero-section .container {
   position: relative;
   padding-bottom: 50px; /* Reserve space at the bottom for absolutely positioned search-wrapper */
-}
-
-[data-theme="dark"] .hero-section {
-  background: var(--primary-gradient);
 }
 
 .badge-ojk-lps {
