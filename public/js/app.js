@@ -37,9 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Calculate default values for calculators
   calculateDeposito();
   calculatePembiayaan();
-
-  // Initialize hero terminal typing animation
-  initHeroTyping();
 });
 
 // --- 1. Real-time Clock and Calendar (Kiosk-style) ---
@@ -210,11 +207,9 @@ function fetchSettings() {
         heroBankNameEl.innerHTML = `RIPLAY <span style="font-weight: 300; opacity: 0.85; margin: 0 16px;">|</span> ${data.logoText || 'BPRS MHY'}`;
       }
       
-      // Hero Subtitle dynamic loading
-      const heroSubtitleEl = document.querySelector('.hero-subtitle');
-      if (heroSubtitleEl) {
-        heroSubtitleEl.textContent = data.heroSubtitle || 'Ringkasan Informasi Produk dan Layanan yang Transparan, Cepat, dan Sesuai Prinsip Syariah';
-      }
+      // Hero Subtitle typing animation loading
+      const subtitleText = data.heroSubtitle || 'Ringkasan Informasi Produk dan Layanan yang Transparan, Cepat, dan Sesuai Prinsip Syariah';
+      initSubtitleTyping(subtitleText);
       
       // About text
       const footerAboutEl = document.getElementById('footer-about-text');
@@ -824,45 +819,27 @@ function sharePembiayaanWA() {
   window.open(`https://api.whatsapp.com/send/?phone=${globalPhone}&text=${encodeURIComponent(message)}`, '_blank');
 }
 
-// --- 14. Terminal Simulator typing animation ---
-function initHeroTyping() {
-  const typingEl = document.getElementById('hero-typing-text');
-  if (!typingEl) return;
+// --- 14. Hero Subtitle typing animation ---
+function initSubtitleTyping(text) {
+  const textEl = document.getElementById('hero-subtitle-text');
+  const cursorEl = document.querySelector('.hero-subtitle-cursor');
+  if (!textEl) return;
 
-  const phrases = [
-    'riplay init --ai antigravity --bank mhy',
-    'riplay show --info "Ringkasan Informasi Produk & Layanan - BPRS Mitra Harmoni Yogyakarta"'
-  ];
-  let phraseIndex = 0;
-  let characterIndex = 0;
-  const typeSpeed = 50;
-  const eraseSpeed = 20;
-  const delayBetweenPhrases = 3000;
+  // Clear existing text to start typing
+  textEl.textContent = '';
+  if (cursorEl) cursorEl.style.display = 'inline';
 
-  function type() {
-    const currentPhrase = phrases[phraseIndex];
-    if (characterIndex < currentPhrase.length) {
-      typingEl.textContent += currentPhrase.charAt(characterIndex);
-      characterIndex++;
-      setTimeout(type, typeSpeed);
-    } else {
-      setTimeout(erase, delayBetweenPhrases);
+  let i = 0;
+  const speed = 40; // typing speed in ms
+
+  function typeWriter() {
+    if (i < text.length) {
+      textEl.textContent += text.charAt(i);
+      i++;
+      setTimeout(typeWriter, speed);
     }
   }
 
-  function erase() {
-    const currentPhrase = phrases[phraseIndex];
-    if (characterIndex > 0) {
-      typingEl.textContent = currentPhrase.substring(0, characterIndex - 1);
-      characterIndex--;
-      setTimeout(erase, eraseSpeed);
-    } else {
-      phraseIndex = (phraseIndex + 1) % phrases.length;
-      setTimeout(type, 500);
-    }
-  }
-
-  // Start animation
-  setTimeout(type, 1000);
+  typeWriter();
 }
 
