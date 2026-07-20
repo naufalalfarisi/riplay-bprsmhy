@@ -350,6 +350,17 @@ function renderProducts() {
   }).join('');
 }
 
+function highlightNavLink(name) {
+  const navLinks = document.querySelectorAll('#navbarText .nav-link');
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    const linkText = link.textContent.toLowerCase();
+    if (linkText.includes(name.toLowerCase())) {
+      link.classList.add('active');
+    }
+  });
+}
+
 // --- 6. Category Selection & Search ---
 function switchCategory(category) {
   activeCategory = category;
@@ -368,14 +379,7 @@ function switchCategory(category) {
   });
 
   // Highlight Nav links
-  const navLinks = document.querySelectorAll('#navbarText .nav-link');
-  navLinks.forEach(link => {
-    link.classList.remove('active');
-    const linkText = link.textContent.toLowerCase();
-    if (linkText.includes(category)) {
-      link.classList.add('active');
-    }
-  });
+  highlightNavLink(category);
 
   // Re-fetch items from server to ensure any edits are visible without manual page refresh!
   fetchProducts();
@@ -518,6 +522,9 @@ function switchCalc(calcType) {
       contentEl.classList.remove('active');
     }
   });
+
+  // Highlight "Simulasi" in navbar when calculator is active
+  highlightNavLink('simulasi');
 
   if (calcType === 'deposito') {
     calculateDeposito();
@@ -739,8 +746,27 @@ function initNavbarScroll() {
     }
   }
 
-  window.addEventListener('scroll', checkScroll);
+  function handleScrollSpy() {
+    const scrollPosition = window.scrollY + 120; // offset for navbar height (safety buffer)
+    const calculatorSec = document.getElementById('calculator');
+    const productsSec = document.getElementById('products');
+    
+    if (calculatorSec && scrollPosition >= calculatorSec.offsetTop) {
+      highlightNavLink('simulasi');
+    } else if (productsSec && scrollPosition >= productsSec.offsetTop) {
+      highlightNavLink(activeCategory);
+    } else {
+      highlightNavLink(activeCategory);
+    }
+  }
+
+  window.addEventListener('scroll', () => {
+    checkScroll();
+    handleScrollSpy();
+  });
+  
   checkScroll(); // Run initial check in case page starts scrolled down
+  handleScrollSpy(); // Run initial check in case page starts scrolled down
 }
 
 function formatTwoToneText(text) {
