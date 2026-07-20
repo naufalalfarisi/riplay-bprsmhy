@@ -818,28 +818,37 @@ function sharePembiayaanWA() {
   const globalPhone = bankSettings.whatsapp || '6285328707560';
   window.open(`https://api.whatsapp.com/send/?phone=${globalPhone}&text=${encodeURIComponent(message)}`, '_blank');
 }
-
 // --- 14. Hero Subtitle typing animation ---
 function initSubtitleTyping(text) {
   const textEl = document.getElementById('hero-subtitle-text');
   const cursorEl = document.querySelector('.hero-subtitle-cursor');
   if (!textEl) return;
 
-  // Clear existing text to start typing
-  textEl.textContent = '';
-  if (cursorEl) cursorEl.style.display = 'inline';
+  let characterIndex = 0;
+  const typeSpeed = 50; // speed of typing in ms
+  const eraseSpeed = 20; // speed of erasing in ms
+  const delayBetweenCycles = 4000; // wait time after full typing
 
-  let i = 0;
-  const speed = 40; // typing speed in ms
-
-  function typeWriter() {
-    if (i < text.length) {
-      textEl.textContent += text.charAt(i);
-      i++;
-      setTimeout(typeWriter, speed);
+  function type() {
+    if (characterIndex < text.length) {
+      textEl.textContent += text.charAt(characterIndex);
+      characterIndex++;
+      setTimeout(type, typeSpeed);
+    } else {
+      setTimeout(erase, delayBetweenCycles);
     }
   }
 
-  typeWriter();
-}
+  function erase() {
+    if (characterIndex > 0) {
+      textEl.textContent = text.substring(0, characterIndex - 1);
+      characterIndex--;
+      setTimeout(erase, eraseSpeed);
+    } else {
+      setTimeout(type, 500); // brief pause before typing again
+    }
+  }
 
+  // Start the animation
+  setTimeout(type, 500);
+}
