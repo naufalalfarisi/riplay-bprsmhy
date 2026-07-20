@@ -37,6 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Calculate default values for calculators
   calculateDeposito();
   calculatePembiayaan();
+
+  // Initialize hero terminal typing animation
+  initHeroTyping();
 });
 
 // --- 1. Real-time Clock and Calendar (Kiosk-style) ---
@@ -820,3 +823,46 @@ function sharePembiayaanWA() {
   const globalPhone = bankSettings.whatsapp || '6285328707560';
   window.open(`https://api.whatsapp.com/send/?phone=${globalPhone}&text=${encodeURIComponent(message)}`, '_blank');
 }
+
+// --- 14. Terminal Simulator typing animation ---
+function initHeroTyping() {
+  const typingEl = document.getElementById('hero-typing-text');
+  if (!typingEl) return;
+
+  const phrases = [
+    'riplay init --ai antigravity --bank mhy',
+    'riplay show --info "Ringkasan Informasi Produk & Layanan - BPRS Mitra Harmoni Yogyakarta"'
+  ];
+  let phraseIndex = 0;
+  let characterIndex = 0;
+  const typeSpeed = 50;
+  const eraseSpeed = 20;
+  const delayBetweenPhrases = 3000;
+
+  function type() {
+    const currentPhrase = phrases[phraseIndex];
+    if (characterIndex < currentPhrase.length) {
+      typingEl.textContent += currentPhrase.charAt(characterIndex);
+      characterIndex++;
+      setTimeout(type, typeSpeed);
+    } else {
+      setTimeout(erase, delayBetweenPhrases);
+    }
+  }
+
+  function erase() {
+    const currentPhrase = phrases[phraseIndex];
+    if (characterIndex > 0) {
+      typingEl.textContent = currentPhrase.substring(0, characterIndex - 1);
+      characterIndex--;
+      setTimeout(erase, eraseSpeed);
+    } else {
+      phraseIndex = (phraseIndex + 1) % phrases.length;
+      setTimeout(type, 500);
+    }
+  }
+
+  // Start animation
+  setTimeout(type, 1000);
+}
+
