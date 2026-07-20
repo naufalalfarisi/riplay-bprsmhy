@@ -1285,7 +1285,7 @@ input:checked + .slider:before {
 
 /* Logo image styles */
 .navbar-logo-img {
-  height: 72px;
+  height: 88px;
   width: auto;
   object-fit: contain;
 }
@@ -1520,7 +1520,7 @@ input:checked + .slider:before {
   }
   
   .navbar-logo-img {
-    height: 52px;
+    height: 64px;
   }
   
   .hero-section {
