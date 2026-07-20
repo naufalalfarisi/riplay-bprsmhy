@@ -201,10 +201,10 @@ function fetchSettings() {
         document.getElementById('footer-bank-name').textContent = data.bankName || 'BPRS MHY';
       }
       
-      // Two-tone Hero Title text
+      // Solid white Hero Title text
       const heroBankNameEl = document.getElementById('hero-bank-name');
       if (heroBankNameEl) {
-        heroBankNameEl.innerHTML = `<span class="tone-riplay">RIPLAY</span><span class="tone-divider">|</span>${formatTwoToneText(data.logoText || 'MHY Syariah')}`;
+        heroBankNameEl.innerHTML = `RIPLAY <span style="font-weight: 300; opacity: 0.85; margin: 0 16px;">|</span> ${data.logoText || 'BPRS MHY'}`;
       }
       
       // Hero Subtitle dynamic loading
