@@ -113,16 +113,16 @@
       <!-- Category Tabs -->
       <div class="category-tabs-container">
         <button class="category-tab active" id="tab-tabungan" onclick="switchCategory('tabungan')">
-          <i class="fa-solid fa-wallet"></i>
-          <span>Tabungan</span>
+          <span class="tab-icon-wrapper"><i class="fa-solid fa-wallet"></i></span>
+          <span class="tab-text">Tabungan</span>
         </button>
         <button class="category-tab" id="tab-deposito" onclick="switchCategory('deposito')">
-          <i class="fa-solid fa-vault"></i>
-          <span>Deposito</span>
+          <span class="tab-icon-wrapper"><i class="fa-solid fa-chart-line"></i></span>
+          <span class="tab-text">Deposito</span>
         </button>
         <button class="category-tab" id="tab-pembiayaan" onclick="switchCategory('pembiayaan')">
-          <i class="fa-solid fa-hand-holding-dollar"></i>
-          <span>Pembiayaan</span>
+          <span class="tab-icon-wrapper"><i class="fa-solid fa-handshake"></i></span>
+          <span class="tab-text">Pembiayaan</span>
         </button>
       </div>
 
@@ -207,7 +207,27 @@
                         <p class="fw-bold mb-0" id="depoResultAccum">Rp 650.000</p>
                       </div>
                     </div>
-                    <p class="small text-white-50 mt-3 mb-0">*Simulasi ini hanya estimasi. Hasil akhir menyesuaikan pendapatan riil bank syariah pada bulan bersangkutan.</p>
+
+                    <!-- Proyeksi Grafik Stacked Bar -->
+                    <div class="mt-4 text-start">
+                      <small class="text-white-50">Proyeksi Pertumbuhan Dana:</small>
+                      <div class="progress mt-1" style="height: 12px; background-color: rgba(255,255,255,0.15); border-radius: 6px; overflow: hidden;">
+                        <div id="chartDepoPrincipalBar" class="progress-bar bg-info" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div id="chartDepoProfitBar" class="progress-bar bg-success" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <div class="d-flex justify-content-between mt-1" style="font-size: 0.75rem;">
+                        <span><i class="fa-solid fa-circle text-info me-1"></i> Pokok (<span id="chartDepoPrincipalPct">90%</span>)</span>
+                        <span><i class="fa-solid fa-circle text-success me-1"></i> Hasil (<span id="chartDepoProfitPct">10%</span>)</span>
+                      </div>
+                    </div>
+
+                    <button class="btn btn-success w-100 mt-4 d-flex align-items-center justify-content-center gap-2" id="btnShareDepo" onclick="shareDepositoWA()" style="border-radius: 14px; padding: 10px; font-weight: 600; box-shadow: 0 4px 12px rgba(40,167,69,0.25);">
+                      <i class="fa-brands fa-whatsapp"></i> Konsultasikan Hasil via WA
+                    </button>
+
+                    <div class="mt-3 text-start small border border-light-subtle p-2 rounded text-white">
+                      <i class="fa-solid fa-circle-info me-1"></i> *Simulasi ini hanya estimasi. Hasil akhir menyesuaikan pendapatan riil bank syariah pada bulan bersangkutan.
+                    </div>
                   </div>
                 </div>
               </div>
@@ -219,36 +239,31 @@
                 <div class="col-md-6 mb-4 mb-md-0">
                   <div class="calc-form">
                     <div class="mb-3">
-                      <label for="loanAmount" class="form-label">Harga Barang / Plafon Pembiayaan</label>
-                      <div class="input-group">
-                        <span class="input-group-text">Rp</span>
-                        <input type="number" class="form-control form-control-lg" id="loanAmount" value="50000000" oninput="calculatePembiayaan()">
-                      </div>
-                    </div>
-                    <div class="mb-3">
-                      <label for="loanDp" class="form-label">Uang Muka / Down Payment (DP)</label>
-                      <div class="input-group">
-                        <span class="input-group-text">Rp</span>
-                        <input type="number" class="form-control form-control-lg" id="loanDp" value="5000000" oninput="calculatePembiayaan()">
-                      </div>
-                      <small class="text-muted">Minimum DP 10% direkomendasikan</small>
-                    </div>
-                    <div class="mb-3">
-                      <label for="loanTenure" class="form-label">Jangka Waktu Cicilan</label>
-                      <select class="form-select form-select-lg" id="loanTenure" onchange="calculatePembiayaan()">
-                        <option value="12">12 Bulan (1 Tahun)</option>
-                        <option value="24">24 Bulan (2 Tahun)</option>
-                        <option value="36" selected>36 Bulan (3 Tahun)</option>
-                        <option value="48">48 Bulan (4 Tahun)</option>
-                        <option value="60">60 Bulan (5 Tahun)</option>
+                      <label for="loanPurpose" class="form-label">Tujuan Pembiayaan</label>
+                      <select class="form-select form-select-lg" id="loanPurpose" onchange="calculatePembiayaan()">
+                        <option value="0.0125" selected>Pembelian Kendaraan (Murabahah)</option>
+                        <option value="0.015">Pembelian Barang (Murabahah)</option>
+                        <option value="0.0083333">Kepemilikan Emas (Murabahah)</option>
+                        <option value="0.011">Umrah (Multijasa)</option>
+                        <option value="0.015">Pendidikan, Walimah, Sewa Rumah/Ruko, dll (Multijasa)</option>
+                        <option value="0.015">Modal Kerja/UMKM (Musyarakah)</option>
                       </select>
                     </div>
                     <div class="mb-3">
-                      <label for="loanMargin" class="form-label">Margin Keuntungan Bank (per Tahun - Flat)</label>
+                      <label for="loanAmount" class="form-label">Jumlah Pembiayaan Rp (Plafon)</label>
                       <div class="input-group">
-                        <input type="number" class="form-control" id="loanMargin" value="8.0" step="0.1" oninput="calculatePembiayaan()">
-                        <span class="input-group-text">%</span>
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control form-control-lg" id="loanAmount" value="50000000" min="1000000" oninput="calculatePembiayaan()">
                       </div>
+                      <small class="text-muted">Nominal pembiayaan bersih yang diajukan</small>
+                    </div>
+                    <div class="mb-3">
+                      <label for="loanTenure" class="form-label">Jangka Waktu Pembiayaan (Tenor)</label>
+                      <div class="input-group">
+                        <input type="number" class="form-control form-control-lg" id="loanTenure" value="36" min="1" max="120" step="1" oninput="calculatePembiayaan()">
+                        <span class="input-group-text">Bulan</span>
+                      </div>
+                      <small class="text-muted">Jangka waktu pembiayaan dalam satuan bulan</small>
                     </div>
                   </div>
                 </div>
@@ -267,8 +282,26 @@
                         <p class="fw-bold mb-0" id="loanResultMargin">Rp 10.800.000</p>
                       </div>
                     </div>
-                    <div class="mt-3 text-start small border border-light-subtle p-2 rounded">
-                      <i class="fa-solid fa-circle-info me-1"></i> Akad yang digunakan: <strong>Murabahah (Jual Beli)</strong>. Angsuran bersifat tetap/flat hingga masa pembiayaan berakhir.
+
+                    <!-- Proyeksi Grafik Stacked Bar -->
+                    <div class="mt-4 text-start">
+                      <small class="text-white-50">Proporsi Pembiayaan:</small>
+                      <div class="progress mt-1" style="height: 12px; background-color: rgba(255,255,255,0.15); border-radius: 6px; overflow: hidden;">
+                        <div id="chartPrincipalBar" class="progress-bar bg-success" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div id="chartMarginBar" class="progress-bar bg-warning" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <div class="d-flex justify-content-between mt-1" style="font-size: 0.75rem;">
+                        <span><i class="fa-solid fa-circle text-success me-1"></i> Pokok (<span id="chartPrincipalPct">75%</span>)</span>
+                        <span><i class="fa-solid fa-circle text-warning me-1"></i> Margin (<span id="chartMarginPct">25%</span>)</span>
+                      </div>
+                    </div>
+
+                    <button class="btn btn-success w-100 mt-4 d-flex align-items-center justify-content-center gap-2" id="btnShareLoan" onclick="sharePembiayaanWA()" style="border-radius: 14px; padding: 10px; font-weight: 600; box-shadow: 0 4px 12px rgba(40,167,69,0.25);">
+                      <i class="fa-brands fa-whatsapp"></i> Konsultasikan Angsuran via WA
+                    </button>
+
+                    <div class="mt-3 text-start small border border-light-subtle p-2 rounded text-white" id="loanAkadNote">
+                      <i class="fa-solid fa-circle-info me-1"></i> Akad yang digunakan: <strong id="loanAkadName">Murabahah (Jual Beli)</strong>. Angsuran bersifat tetap/flat hingga masa pembiayaan berakhir.
                     </div>
                   </div>
                 </div>

@@ -328,7 +328,7 @@ function renderProducts() {
         <div class="product-card">
           <!-- Background Image Wrapper -->
           <div class="product-card-img-wrapper" onclick="openRipLayModal('${product.id}')" style="cursor: pointer;">
-            <img src="${imageSrc}" alt="${escapeHTML(product.name)}" class="product-card-bg-img">
+            <img src="${imageSrc}" alt="${escapeHTML(product.name)}" class="product-card-bg-img" onerror="this.onerror=null; this.src='/images/logo-mhy.png';">
           </div>
           
           <!-- Floating Category Icon Badge -->
@@ -424,7 +424,12 @@ function openRipLayModal(productId) {
       const descBlock = document.getElementById('modalDescriptionBlock');
       
       if (product.imageUrl && product.imageUrl.trim() !== '') {
-        if (imgEl) imgEl.src = product.imageUrl;
+        if (imgEl) {
+          imgEl.src = product.imageUrl;
+          imgEl.onerror = () => {
+            imgEl.src = '/images/logo-mhy.png';
+          };
+        }
         if (imgBlock) imgBlock.classList.remove('d-none');
         if (descBlock) descBlock.style.gridColumn = 'span 1';
       } else {
@@ -560,38 +565,91 @@ function calculateDeposito() {
   document.getElementById('depoResult').textContent = formatIDR(monthlyBagiHasilNet);
   document.getElementById('depoResultTotal').textContent = formatIDR(amount);
   document.getElementById('depoResultAccum').textContent = formatIDR(totalAccumulation);
+
+  // Update Dynamic Chart
+  const totalSum = amount + totalAccumulation;
+  const principalPct = totalSum > 0 ? (amount / totalSum) * 100 : 100;
+  const profitPct = totalSum > 0 ? (totalAccumulation / totalSum) * 100 : 0;
+
+  const principalBar = document.getElementById('chartDepoPrincipalBar');
+  const profitBar = document.getElementById('chartDepoProfitBar');
+  const principalPctText = document.getElementById('chartDepoPrincipalPct');
+  const profitPctText = document.getElementById('chartDepoProfitPct');
+
+  if (principalBar && profitBar && principalPctText && profitPctText) {
+    principalBar.style.width = `${principalPct}%`;
+    profitBar.style.width = `${profitPct}%`;
+    principalPctText.textContent = `${principalPct.toFixed(1)}%`;
+    profitPctText.textContent = `${profitPct.toFixed(1)}%`;
+  }
 }
 
-// --- 10. Pembiayaan Calculator Logic (Murabahah Syariah - Flat) ---
+// --- 10. Pembiayaan Calculator Logic (BPRS BDS Style) ---
 function calculatePembiayaan() {
+  const purposeSelect = document.getElementById('loanPurpose');
   const amountInput = document.getElementById('loanAmount');
-  const dpInput = document.getElementById('loanDp');
-  const tenureSelect = document.getElementById('loanTenure');
-  const marginInput = document.getElementById('loanMargin');
+  const tenureInput = document.getElementById('loanTenure');
 
-  if (!amountInput || !dpInput || !tenureSelect || !marginInput) return;
+  if (!purposeSelect || !amountInput || !tenureInput) return;
 
-  const totalPrice = parseFloat(amountInput.value) || 0;
-  const dp = parseFloat(dpInput.value) || 0;
-  const tenorMonths = parseInt(tenureSelect.value) || 36;
-  const annualMargin = parseFloat(marginInput.value) || 8.0;
+  const monthlyRate = parseFloat(purposeSelect.value) || 0.015;
+  const plafon = parseFloat(amountInput.value) || 0;
+  const tenorMonths = parseInt(tenureInput.value) || 36;
 
-  // Calculate Principal Loan
-  const principal = Math.max(0, totalPrice - dp);
-  
-  // Total Margin Bank = Principal * (Margin Rate per year * (Months / 12))
-  const totalMargin = principal * (annualMargin / 100) * (tenorMonths / 12);
-  
-  // Total Pembayaran = Pokok + Margin
-  const totalLiability = principal + totalMargin;
-  
-  // Angsuran Bulanan = Total Pembayaran / Tenor Bulan
-  const monthlyInstallment = tenorMonths > 0 ? (totalLiability / tenorMonths) : 0;
+  // Monthly Margin = rate * plafon
+  const monthlyMargin = plafon * monthlyRate;
 
-  // Update UI
+  // Monthly Principal = plafon / tenor
+  const monthlyPrincipal = tenorMonths > 0 ? (plafon / tenorMonths) : 0;
+
+  // Monthly Installment = Monthly Principal + Monthly Margin
+  const monthlyInstallment = monthlyPrincipal + monthlyMargin;
+
+  // Total Margin over the whole tenor
+  const totalMargin = monthlyMargin * tenorMonths;
+
+  // Total Payment (Pokok + Margin)
+  const totalLiability = plafon + totalMargin;
+
+  // Update UI Result fields
   document.getElementById('loanResult').textContent = formatIDR(monthlyInstallment);
-  document.getElementById('loanResultPrincipal').textContent = formatIDR(principal);
+  document.getElementById('loanResultPrincipal').textContent = formatIDR(plafon);
   document.getElementById('loanResultMargin').textContent = formatIDR(totalMargin);
+
+  // Update Dynamic Chart (Pokok vs Margin)
+  const principalPct = totalLiability > 0 ? (plafon / totalLiability) * 100 : 100;
+  const marginPct = totalLiability > 0 ? (totalMargin / totalLiability) * 100 : 0;
+
+  const pBar = document.getElementById('chartPrincipalBar');
+  const mBar = document.getElementById('chartMarginBar');
+  const pPctText = document.getElementById('chartPrincipalPct');
+  const mPctText = document.getElementById('chartMarginPct');
+
+  if (pBar && mBar && pPctText && mPctText) {
+    pBar.style.width = `${principalPct}%`;
+    mBar.style.width = `${marginPct}%`;
+    pPctText.textContent = `${principalPct.toFixed(1)}%`;
+    mPctText.textContent = `${marginPct.toFixed(1)}%`;
+  }
+
+  // Update Akad Note Dynamically
+  const selectedIndex = purposeSelect.selectedIndex;
+  const purposeText = purposeSelect.options[selectedIndex].text;
+  let akadName = 'Murabahah (Jual Beli)';
+  let akadDescription = 'Angsuran bersifat tetap/flat hingga masa pembiayaan berakhir.';
+
+  if (purposeText.includes('Multijasa') || purposeText.includes('Umrah') || purposeText.includes('Pendidikan')) {
+    akadName = 'Ijarah (Sewa Jasa / Multijasa)';
+    akadDescription = 'Angsuran bersifat tetap/flat hingga masa pembiayaan berakhir.';
+  } else if (purposeText.includes('Musyarakah') || purposeText.includes('Modal Kerja')) {
+    akadName = 'Musyarakah (Bagi Hasil / Syirkah)';
+    akadDescription = 'Angsuran/kontribusi disesuaikan dengan nisbah bagi hasil usaha.';
+  }
+
+  const akadNoteEl = document.getElementById('loanAkadNote');
+  if (akadNoteEl) {
+    akadNoteEl.innerHTML = `<i class="fa-solid fa-circle-info me-1"></i> Akad yang digunakan: <strong>${akadName}</strong>. ${akadDescription}`;
+  }
 }
 
 // --- 11. Custom Branding Theme Dynamic Adjustments ---
@@ -694,4 +752,45 @@ function formatTwoToneText(text) {
     return `<span class="tone-1">${firstWord}</span> <span class="tone-2">${rest}</span>`;
   }
   return `<span class="tone-1">${text}</span>`;
+}
+
+// --- 13. WhatsApp Simulation Sharing Handlers ---
+function shareDepositoWA() {
+  const amount = document.getElementById('depoResultTotal').textContent;
+  const tenureSelect = document.getElementById('depoTenure');
+  const tenureText = tenureSelect ? tenureSelect.options[tenureSelect.selectedIndex].text : '';
+  const rate = document.getElementById('depoRate').value;
+  const monthlyResult = document.getElementById('depoResult').textContent;
+  const accumResult = document.getElementById('depoResultAccum').textContent;
+  
+  const message = `Assalamu'alaikum, saya ingin berkonsultasi mengenai penempatan Deposito Syariah:\n\n` +
+    `- Jumlah Penempatan: ${amount}\n` +
+    `- Jangka Waktu: ${tenureText}\n` +
+    `- Proyeksi Bagi Hasil (Equiv. Rate): ${rate}%\n` +
+    `- Estimasi Hasil/Bulan (Nett): ${monthlyResult}\n` +
+    `- Total Akumulasi Hasil: ${accumResult}\n\n` +
+    `Mohon dibantu informasi selengkapnya. Terima kasih.`;
+    
+  const globalPhone = bankSettings.whatsapp || '6285328707560';
+  window.open(`https://api.whatsapp.com/send/?phone=${globalPhone}&text=${encodeURIComponent(message)}`, '_blank');
+}
+
+function sharePembiayaanWA() {
+  const purposeSelect = document.getElementById('loanPurpose');
+  const purposeText = purposeSelect ? purposeSelect.options[purposeSelect.selectedIndex].text : '';
+  const totalPrice = formatIDR(parseFloat(document.getElementById('loanAmount').value) || 0);
+  const tenure = document.getElementById('loanTenure').value;
+  const monthlyResult = document.getElementById('loanResult').textContent;
+  const totalMargin = document.getElementById('loanResultMargin').textContent;
+  
+  const message = `Assalamu'alaikum, saya ingin berkonsultasi mengenai pengajuan Pembiayaan Syariah:\n\n` +
+    `- Tujuan Pembiayaan: ${purposeText}\n` +
+    `- Jumlah Pembiayaan (Plafon): ${totalPrice}\n` +
+    `- Jangka Waktu (Tenor): ${tenure} Bulan\n` +
+    `- Total Margin Bank: ${totalMargin}\n` +
+    `- Estimasi Angsuran/Bulan: ${monthlyResult}\n\n` +
+    `Mohon dibantu informasi persyaratan pengajuannya. Terima kasih.`;
+    
+  const globalPhone = bankSettings.whatsapp || '6285328707560';
+  window.open(`https://api.whatsapp.com/send/?phone=${globalPhone}&text=${encodeURIComponent(message)}`, '_blank');
 }

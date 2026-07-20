@@ -1,13 +1,13 @@
 {
   "settings": {
-    "bankName": "PT. BPR Syariah Mitra Harmoni Yogyakarta",
+    "bankName": "PT. BPR Syariah Mitra Harmoni Yogyakarta (MHY)",
     "logoText": "BPRS MHY",
     "phone": "(0274) 547774",
     "address": "Jl. Doktor Sutomo No. 07, Kota Yogyakarta, Provinsi Daerah Istimewa Yogyakarta, Kode Pos: 55211",
     "email": "mhy.syariah@yahoo.com",
     "whatsapp": "62274547774",
     "username": "superadmin",
-    "passcode": "admin123",
+    "passcode": "80f9c06b1a3fa5ed467569426d6ca13b23883852316db90b24520552f8047341",
     "heroSubtitle": "Ringkasan Informasi Produk & Layanan - BPRS Mitra Harmoni Yogyakarta",
     "themeColor": "#29b9a0",
     "bgColor": "#f5f7fb",
@@ -151,7 +151,7 @@
         "Mengisi formulir pendaftaran tabungan iB Qurban",
         "Fotokopi Kartu Tanda Penduduk (KTP)"
       ],
-      "pdfUrl": "",
+      "pdfUrl": "/uploads/1784556952549-001-BPRSMH-DIR-VII-2026-1__2_.pdf",
       "whatsappLink": "https://api.whatsapp.com/send/?phone=6285328707560&text=Assalamu%27alaikum+saya+tertarik+membuka+Tabungan+iB+Qurban"
     },
     {

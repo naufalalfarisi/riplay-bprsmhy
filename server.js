@@ -3,9 +3,18 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Setup session memory store
+const activeSessions = new Map(); // token -> { username, createdAt }
+
+function hashPasscode(passcode) {
+  if (!passcode) return '';
+  return crypto.createHash('sha256').update(passcode + 'riplay_salt_987654321').digest('hex');
+}
 
 // Setup directories
 const DATA_DIR = path.join(__dirname, 'data');
@@ -19,8 +28,60 @@ if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
 
-// Ensure db.json exists
-if (!fs.existsSync(DB_PATH)) {
+// Ensure db.json exists and is valid
+const BACKUP_PATH = DB_PATH + '.bak';
+let dbValid = false;
+
+if (fs.existsSync(DB_PATH)) {
+  try {
+    const raw = fs.readFileSync(DB_PATH, 'utf8');
+    JSON.parse(raw);
+    dbValid = true;
+  } catch (err) {
+    console.error('Main db.json is corrupted or unparseable, attempting recovery from backup...');
+  }
+}
+
+if (!dbValid) {
+  if (fs.existsSync(BACKUP_PATH)) {
+    try {
+      const rawBackup = fs.readFileSync(BACKUP_PATH, 'utf8');
+      JSON.parse(rawBackup);
+      fs.copyFileSync(BACKUP_PATH, DB_PATH);
+      console.log('Restored db.json from backup (db.json.bak) successfully!');
+      dbValid = true;
+    } catch (err) {
+      console.error('Backup db.json.bak is also corrupted or missing:', err);
+    }
+  }
+}
+
+if (dbValid && !fs.existsSync(BACKUP_PATH)) {
+  try {
+    fs.copyFileSync(DB_PATH, BACKUP_PATH);
+    console.log('Created initial database backup (db.json.bak) on startup');
+  } catch (err) {
+    console.error('Failed to create initial database backup on startup:', err);
+  }
+}
+
+// Migrate passcode to hash if not already hashed
+if (dbValid) {
+  try {
+    const db = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+    const passcode = db.settings.passcode || 'admin123';
+    if (passcode.length !== 64 || !/^[0-9a-f]{64}$/i.test(passcode)) {
+      db.settings.passcode = hashPasscode(passcode);
+      fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), 'utf8');
+      fs.writeFileSync(BACKUP_PATH, JSON.stringify(db, null, 2), 'utf8');
+      console.log('Migrated plaintext passcode to hashed passcode successfully.');
+    }
+  } catch (err) {
+    console.error('Failed to migrate passcode on startup:', err);
+  }
+}
+
+if (!dbValid) {
   const defaultDb = {
     settings: {
       bankName: "BPRS Barokah Dana Sejahtera (BDS)",
@@ -30,7 +91,7 @@ if (!fs.existsSync(DB_PATH)) {
       email: "info@bprsbds.co.id",
       whatsapp: "6285328707560",
       username: "admin",
-      passcode: "admin123",
+      passcode: hashPasscode("admin123"),
       heroSubtitle: "Ringkasan Informasi Produk dan Layanan yang Transparan, Cepat, dan Sesuai Prinsip Syariah",
       themeColor: "#0d47a1",
       bgColor: "#f5f7fb",
@@ -43,6 +104,8 @@ if (!fs.existsSync(DB_PATH)) {
     products: []
   };
   fs.writeFileSync(DB_PATH, JSON.stringify(defaultDb, null, 2), 'utf8');
+  fs.writeFileSync(BACKUP_PATH, JSON.stringify(defaultDb, null, 2), 'utf8');
+  console.log('Created fresh db.json and backup because no valid database was found.');
 }
 
 // Middleware
@@ -57,34 +120,102 @@ app.use('/uploads', express.static(UPLOADS_DIR));
 // DB Helpers
 function readDB() {
   try {
-    const data = fs.readFileSync(DB_PATH, 'utf8');
-    return JSON.parse(data);
+    if (fs.existsSync(DB_PATH)) {
+      const data = fs.readFileSync(DB_PATH, 'utf8');
+      return JSON.parse(data);
+    }
   } catch (err) {
-    console.error('Error reading DB:', err);
-    return { settings: {}, products: [] };
+    console.error('Error reading DB, trying fallback to backup:', err);
+    if (fs.existsSync(BACKUP_PATH)) {
+      try {
+        const backupData = fs.readFileSync(BACKUP_PATH, 'utf8');
+        const parsed = JSON.parse(backupData);
+        // Repair main DB with backup
+        fs.writeFileSync(DB_PATH, backupData, 'utf8');
+        console.log('Restored corrupted main DB with backup data.');
+        return parsed;
+      } catch (backupErr) {
+        console.error('Failed to read backup DB:', backupErr);
+      }
+    }
   }
+  return { settings: {}, products: [] };
 }
 
 function writeDB(data) {
+  const tempPath = DB_PATH + '.tmp';
   try {
-    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
+    const jsonStr = JSON.stringify(data, null, 2);
+
+    // Update backup with current DB if it is valid JSON
+    if (fs.existsSync(DB_PATH)) {
+      try {
+        const currentData = fs.readFileSync(DB_PATH, 'utf8');
+        JSON.parse(currentData);
+        fs.copyFileSync(DB_PATH, BACKUP_PATH);
+      } catch (err) {
+        console.warn('Skipping backup update as current db.json is corrupted');
+      }
+    }
+
+    // Atomic write: write to temp file then rename
+    fs.writeFileSync(tempPath, jsonStr, 'utf8');
+    fs.renameSync(tempPath, DB_PATH);
     return true;
   } catch (err) {
-    console.error('Error writing DB:', err);
+    console.error('Error writing DB atomically:', err);
+    if (fs.existsSync(tempPath)) {
+      try { fs.unlinkSync(tempPath); } catch (_) {}
+    }
     return false;
+  }
+}
+
+function safelyDeleteUploadFile(fileUrl, db) {
+  if (!fileUrl || !fileUrl.startsWith('/uploads/')) return;
+  
+  // Check if any other product uses this file
+  const isUsedByOtherProduct = (db.products || []).some(p => p.imageUrl === fileUrl || p.pdfUrl === fileUrl);
+  // Check if settings use this file
+  const isUsedBySettings = db.settings && (db.settings.logoUrl === fileUrl || db.settings.logoLightUrl === fileUrl);
+  
+  if (!isUsedByOtherProduct && !isUsedBySettings) {
+    const filename = path.basename(fileUrl);
+    const filePath = path.join(UPLOADS_DIR, filename);
+    if (fs.existsSync(filePath)) {
+      try {
+        fs.unlinkSync(filePath);
+        console.log('Successfully deleted unreferenced upload file:', filename);
+      } catch (err) {
+        console.error('Failed to delete upload file:', filename, err);
+      }
+    }
   }
 }
 
 // Auth Middleware
 function requireAdmin(req, res, next) {
-  const db = readDB();
-  const validPasscode = db.settings.passcode || 'admin123';
   const token = req.cookies.admin_token;
   
-  if (token === validPasscode || req.headers['authorization'] === `Bearer ${validPasscode}`) {
-    next();
+  // Support Bearer authorization token header if needed
+  let authHeaderToken = null;
+  if (req.headers['authorization'] && req.headers['authorization'].startsWith('Bearer ')) {
+    authHeaderToken = req.headers['authorization'].substring(7);
+  }
+  
+  const activeToken = token || authHeaderToken;
+  
+  if (activeToken && activeSessions.has(activeToken)) {
+    const session = activeSessions.get(activeToken);
+    // Session validity check (24 hours)
+    if (Date.now() - session.createdAt < 24 * 60 * 60 * 1000) {
+      next();
+    } else {
+      activeSessions.delete(activeToken);
+      res.status(401).json({ success: false, error: 'Sesi telah kedaluwarsa. Silakan login kembali.' });
+    }
   } else {
-    res.status(401).json({ success: false, error: 'Unauthorized: Masukkan kode sandi yang valid.' });
+    res.status(401).json({ success: false, error: 'Unauthorized: Sesi tidak valid atau telah berakhir.' });
   }
 }
 
@@ -121,8 +252,14 @@ app.post('/api/login', (req, res) => {
   const validUsername = db.settings.username || 'admin';
   const validPasscode = db.settings.passcode || 'admin123';
   
-  if (username === validUsername && passcode === validPasscode) {
-    res.cookie('admin_token', passcode, { httpOnly: true, path: '/', maxAge: 24 * 60 * 60 * 1000 }); // 1 day
+  // Hash the incoming passcode to compare it with the stored hashed passcode
+  const hashedInput = hashPasscode(passcode);
+  
+  if (username === validUsername && hashedInput === validPasscode) {
+    const sessionToken = crypto.randomUUID();
+    activeSessions.set(sessionToken, { username: username, createdAt: Date.now() });
+    
+    res.cookie('admin_token', sessionToken, { httpOnly: true, path: '/', maxAge: 24 * 60 * 60 * 1000 }); // 1 day
     res.json({ success: true });
   } else {
     res.status(400).json({ success: false, error: 'Username atau kode sandi salah!' });
@@ -130,6 +267,10 @@ app.post('/api/login', (req, res) => {
 });
 
 app.post('/api/logout', (req, res) => {
+  const token = req.cookies.admin_token;
+  if (token) {
+    activeSessions.delete(token);
+  }
   res.clearCookie('admin_token', { httpOnly: true, path: '/' });
   res.clearCookie('admin_token', { httpOnly: true, path: '/api' });
   res.clearCookie('admin_token');
@@ -138,15 +279,17 @@ app.post('/api/logout', (req, res) => {
 
 app.get('/api/check-auth', (req, res) => {
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-  const db = readDB();
-  const validPasscode = db.settings.passcode || 'admin123';
   const token = req.cookies.admin_token;
   
-  if (token === validPasscode) {
-    res.json({ success: true, authenticated: true, username: db.settings.username || 'admin' });
-  } else {
-    res.json({ success: true, authenticated: false });
+  if (token && activeSessions.has(token)) {
+    const session = activeSessions.get(token);
+    if (Date.now() - session.createdAt < 24 * 60 * 60 * 1000) {
+      return res.json({ success: true, authenticated: true, username: session.username });
+    } else {
+      activeSessions.delete(token);
+    }
   }
+  res.json({ success: true, authenticated: false });
 });
 
 // Settings Routes
@@ -163,10 +306,21 @@ app.put('/api/settings', requireAdmin, (req, res) => {
   const db = readDB();
   const newSettings = req.body;
   
-  // Preserve passcode if not provided/empty in update
-  const passcode = newSettings.passcode && newSettings.passcode.trim() !== '' 
-    ? newSettings.passcode.trim() 
-    : db.settings.passcode;
+  // Track old logo URLs for cleanup
+  const oldLogo = db.settings.logoUrl;
+  const oldLogoLight = db.settings.logoLightUrl;
+
+  // Handle passcode updates with secure hashing
+  let passcode = db.settings.passcode;
+  if (newSettings.passcode && newSettings.passcode.trim() !== '') {
+    const trimmedPasscode = newSettings.passcode.trim();
+    // If it's already a 64-char hex string, don't double hash
+    if (trimmedPasscode.length === 64 && /^[0-9a-f]{64}$/i.test(trimmedPasscode)) {
+      passcode = trimmedPasscode;
+    } else {
+      passcode = hashPasscode(trimmedPasscode);
+    }
+  }
 
   // Preserve or update username
   const username = newSettings.username && newSettings.username.trim() !== ''
@@ -181,6 +335,13 @@ app.put('/api/settings', requireAdmin, (req, res) => {
   };
   
   if (writeDB(db)) {
+    // If saving succeeded, clean up old logo files if they were replaced
+    if (newSettings.logoUrl !== undefined && oldLogo !== newSettings.logoUrl) {
+      safelyDeleteUploadFile(oldLogo, db);
+    }
+    if (newSettings.logoLightUrl !== undefined && oldLogoLight !== newSettings.logoLightUrl) {
+      safelyDeleteUploadFile(oldLogoLight, db);
+    }
     res.json({ success: true, message: 'Pengaturan berhasil diperbarui.' });
   } else {
     res.status(500).json({ success: false, error: 'Gagal memperbarui pengaturan.' });
@@ -256,6 +417,10 @@ app.put('/api/products/:id', requireAdmin, (req, res) => {
     return res.status(404).json({ success: false, error: 'Produk tidak ditemukan.' });
   }
   
+  // Store old upload paths for cleanup
+  const oldImageUrl = db.products[index].imageUrl;
+  const oldPdfUrl = db.products[index].pdfUrl;
+  
   // Update fields
   db.products[index] = {
     ...db.products[index],
@@ -275,6 +440,13 @@ app.put('/api/products/:id', requireAdmin, (req, res) => {
   };
   
   if (writeDB(db)) {
+    // Clean up replaced images/PDFs if they changed
+    if (productData.imageUrl !== undefined && oldImageUrl !== productData.imageUrl) {
+      safelyDeleteUploadFile(oldImageUrl, db);
+    }
+    if (productData.pdfUrl !== undefined && oldPdfUrl !== productData.pdfUrl) {
+      safelyDeleteUploadFile(oldPdfUrl, db);
+    }
     res.json({ success: true, product: db.products[index] });
   } else {
     res.status(500).json({ success: false, error: 'Gagal memperbarui produk.' });
@@ -285,14 +457,20 @@ app.delete('/api/products/:id', requireAdmin, (req, res) => {
   const db = readDB();
   const { id } = req.params;
   
-  const initialLength = db.products.length;
-  db.products = db.products.filter(p => p.id !== id);
-  
-  if (db.products.length === initialLength) {
+  const productToDelete = db.products.find(p => p.id === id);
+  if (!productToDelete) {
     return res.status(404).json({ success: false, error: 'Produk tidak ditemukan.' });
   }
   
+  const imageUrl = productToDelete.imageUrl;
+  const pdfUrl = productToDelete.pdfUrl;
+  
+  db.products = db.products.filter(p => p.id !== id);
+  
   if (writeDB(db)) {
+    // Clean up files physically from disk
+    safelyDeleteUploadFile(imageUrl, db);
+    safelyDeleteUploadFile(pdfUrl, db);
     res.json({ success: true, message: 'Produk berhasil dihapus.' });
   } else {
     res.status(500).json({ success: false, error: 'Gagal menghapus produk.' });
